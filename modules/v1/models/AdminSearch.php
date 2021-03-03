@@ -2,9 +2,11 @@
 
 namespace app\modules\v1\models;
 
-use Yii,yii\base\Model,yii\data\ActiveDataProvider,
-app\modules\v1\models\AdminInfo,
-app\modules\v1\models\Admin,yii\data\Pagination;
+use Yii,
+    yii\base\Model,
+    yii\data\ActiveDataProvider,
+    app\modules\v1\model\Admin,
+    yii\data\Pagination;
 /**
  * AdminSearch represents the model behind the search form of `app\modules\v1\models\Admin`.
  */

@@ -2,14 +2,14 @@
 
 namespace app\modules\v1\controllers;
 
-use Yii,app\modules\v1\models\Admin,
+use Yii,app\modules\v1\model\Admin,
     app\modules\v1\models\AdminSearch,
     yii\web\NotFoundHttpException,
     yii\helpers\ArrayHelper,
     app\common\CheckData,
     app\common\Helper,
     yii\filters\Cors,
-    app\modules\v1\models\AdminInfo;
+    app\modules\v1\model\AdminInfo;
 
 /**
  * AdminController implements the CRUD actions for Admin model.

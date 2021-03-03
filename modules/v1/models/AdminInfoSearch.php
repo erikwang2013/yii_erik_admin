@@ -2,9 +2,9 @@
 
 namespace app\modules\v1\models;
 
-use yii\base\Model;
-use yii\data\ActiveDataProvider;
-use app\modules\v1\models\AdminInfo;
+use yii\base\Model, 
+    yii\data\ActiveDataProvider,
+    app\modules\v1\model\AdminInfo;
 
 /**
  * AdminInfoSearch represents the model behind the search form of `app\modules\v1\models\AdminInfo`.

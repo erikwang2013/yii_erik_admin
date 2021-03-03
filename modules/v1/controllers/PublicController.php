@@ -6,7 +6,7 @@ use Yii,
     app\common\CheckData,
     app\common\Helper,
     yii\captcha\Captcha,
-    app\modules\v1\models\Admin;
+    app\modules\v1\model\Admin;
 
 /**
  * 公用接口
