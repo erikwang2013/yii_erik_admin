@@ -5,7 +5,6 @@ namespace app\modules\v1\controllers;
 use Yii,
     app\common\CheckData,
     app\common\Helper,
-    yii\captcha\Captcha,
     app\modules\v1\model\Admin;
 
 /**
