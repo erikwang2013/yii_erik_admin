@@ -50,7 +50,7 @@ class AdminInfo extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'User Id'),
+            'id' => Yii::t('app', 'Admin Id'),
             'real_name' => Yii::t('app', 'Real Name'),
             'sex' => Yii::t('app', 'Sex'),
             'phone' => Yii::t('app', 'Phone'),

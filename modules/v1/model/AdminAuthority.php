@@ -44,12 +44,12 @@ class AdminAuthority extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
+            'id' => Yii::t('app', 'Authority ID'),
             'parent_id' => Yii::t('app', 'Parent ID'),
-            'code' => Yii::t('app', 'Code'),
-            'name' => Yii::t('app', 'Name'),
-            'show' => Yii::t('app', 'Show'),
-            'status' => Yii::t('app', 'Status'),
+            'code' => Yii::t('app', 'Authority Code'),
+            'name' => Yii::t('app', 'Authority Name'),
+            'show' => Yii::t('app', 'Authority Show'),
+            'status' => Yii::t('app', 'Authority Status'),
         ];
     }
 }

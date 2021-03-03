@@ -42,9 +42,9 @@ class AdminRoleInfo extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
-            'name' => Yii::t('app', 'Name'),
-            'status' => Yii::t('app', 'Status'),
+            'id' => Yii::t('app', 'Role ID'),
+            'name' => Yii::t('app', 'Role Name'),
+            'status' => Yii::t('app', 'Role Status'),
             'create_time' => Yii::t('app', 'Create Time'),
         ];
     }

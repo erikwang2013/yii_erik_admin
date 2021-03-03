@@ -53,8 +53,8 @@ class Admin extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'User Id'),
-            'name' => Yii::t('app', 'User Name'),
+            'id' => Yii::t('app', 'Admin Id'),
+            'name' => Yii::t('app', 'Admin Name'),
             'password' => Yii::t('app', 'Password'),
             'password_repeat'=>Yii::t('app','Repeat Password')
         ];
