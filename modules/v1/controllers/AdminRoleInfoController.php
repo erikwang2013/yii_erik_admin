@@ -7,7 +7,10 @@ use Yii,
     app\modules\v1\models\AdminRoleInfoSearch,
     app\modules\v1\controllers\DefaultController,
     yii\web\NotFoundHttpException,
-    yii\filters\VerbFilter;
+    app\common\CheckData,
+    app\common\Helper,
+    yii\helpers\ArrayHelper,
+    yii\filters\Cors;
 
 /**
  * AdminRoleInfoController implements the CRUD actions for AdminRoleInfo model.
@@ -19,14 +22,21 @@ class AdminRoleInfoController extends DefaultController
      */
     public function behaviors()
     {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
+        $controller=Yii::$app->controller->id;
+       $config=Yii::$app->params['controller_cors'];
+       $config_data=$config[$controller];
+        return ArrayHelper::merge([
+            [
+                'class' => Cors::className(),
+                'cors' => [
+                            'Origin' =>$config_data['cors']['origin'],                  //允许来源的数组
+                            'Access-Control-Request-Method' =>$config_data['cors']['request'],     //允许动作
                 ],
+                // 'actions' => [
+                //    $config_data['actions']
+                // ]
             ],
-        ];
+        ], parent::behaviors());
     }
 
     /**
@@ -36,25 +46,20 @@ class AdminRoleInfoController extends DefaultController
     public function actionIndex()
     {
         $searchModel = new AdminRoleInfoSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
-
-    /**
-     * Displays a single AdminRoleInfo model.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        $searchModel->attributes=Yii::$app->request->queryParams;
+        $result=[];
+        $page=Yii::$app->request->get('page');
+        $limit=Yii::$app->request->get('limit');
+        $error_page=CheckData::checkPage($page,$limit);
+        if($error_page){
+            return Helper::reset([],0,1,$error_page);
+        }
+        if ($searchModel->validate()) {
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+            $result=ArrayHelper::toArray($dataProvider);
+            return Helper::reset($result['list'],$result['count'],0);
+        }
+        return Helper::reset([],0,1,CheckData::getValidateError($searchModel->errors));
     }
 
     /**

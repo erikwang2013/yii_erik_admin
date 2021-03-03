@@ -98,6 +98,30 @@ $config = [
                         'PUT reset-password'=>'reset-password'
                     ],
                 ],
+                //权限
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'v1/admin-authority',
+                    'pluralize' => false,
+                    'extraPatterns' => [
+                        'GET admin-authority' => 'index',
+                        'POST admin-authority'=>'create',
+                        'PUT admin-authority'=>'update',
+                        'DELETE admin-authority'=>'delete'
+                    ],
+                ],
+                //角色
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'v1/admin-role-info',
+                    'pluralize' => false,
+                    'extraPatterns' => [
+                        'GET admin-role-info' => 'index',
+                        'POST admin-role-info'=>'create',
+                        'PUT admin-role-info'=>'update',
+                        'DELETE admin-role-info'=>'delete'
+                    ],
+                ],
             ],
         ],
         'i18n' => [
