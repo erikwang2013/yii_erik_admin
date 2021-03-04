@@ -53,19 +53,75 @@ class CheckData
         return false;
     }
 
+    /**
+     * 验证管理员id
+     *
+     * @Author erik
+     * @Email erik@erik.xyz
+     * @Url https://erik.xyz
+     * @DateTime 2021-03-05 00:11:15
+     * @param [type] $id
+     * @return void
+     */
     public static function checkId($id){
-        $validator=DynamicModel::validateData(compact('id'),
-            [
-                ['id','integer'],
-                ['id','required']
-            ]
-        );
+        $validator=new DynamicModel(compact('id'));
+        $attribute=[
+            'id'=>Yii::t('app','Admin Id')
+        ];
+        $validator->setAttributeLabels($attribute)
+        ->addRule(['id'],'integer',['max'=>20])
+        ->addRule(['id'],'required')
+        ->validate();
         if($validator->hasErrors()){
             return self::getValidateError($validator->errors);
         }
         return false;
     }
 
+    /**
+     * 验证管理员搜索条件
+     *
+     * @Author erik
+     * @Email erik@erik.xyz
+     * @Url https://erik.xyz
+     * @DateTime 2021-03-05 00:11:26
+     * @param string $name
+     * @param string $real_name
+     * @param string $phone
+     * @param string $email
+     * @return void
+     */
+    public static function checkAdminKeyword($name='',$real_name='',$phone='',$email=''){
+        $validator=new DynamicModel(compact('name','real_name','phone','email'));
+        $attribute=[
+            'name'=>Yii::t('app', 'Admin Name'),
+            'real_name'=>Yii::t('app','Real Name'),
+            'phone'=>Yii::t('app','Phone'),
+            'email'=>Yii::t('app','Email'),
+        ];
+        $validator->setAttributeLabels($attribute)
+        ->addRule(['name','real_name'],'string',['max'=>18])
+        ->addRule(['phone'],'match',['pattern'=>'/^[1][345678][0-9]{9}$/'])
+        ->addRule(['phone'],'string',['max'=>11])
+        ->addRule(['email'],'string',['max'=>60])
+        ->addRule(['email'],'email')
+        ->validate();
+        if($validator->hasErrors()){
+            return self::getValidateError($validator->errors);
+        }
+        return false;
+    }
+
+    /**
+     * 验证密码
+     *
+     * @Author erik
+     * @Email erik@erik.xyz
+     * @Url https://erik.xyz
+     * @DateTime 2021-03-05 00:11:41
+     * @param [type] $password
+     * @return void
+     */
     public static function checkPassword($password){
         $validator=new DynamicModel(compact('password'));
         $validator->setAttributeLabels(['password'=>Yii::t('app', 'Password')])
@@ -118,6 +174,16 @@ class CheckData
         return false;
     }
 
+    /**
+     * 验证码校验
+     *
+     * @Author erik
+     * @Email erik@erik.xyz
+     * @Url https://erik.xyz
+     * @DateTime 2021-03-05 00:11:59
+     * @param [type] $code
+     * @return void
+     */
     public static function checkCode($code){
         $validator=new DynamicModel(compact('code'));
         $validator->setAttributeLabels(['code'=>Yii::t('app','Salt Code')])

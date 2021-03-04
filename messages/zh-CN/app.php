@@ -20,7 +20,7 @@ return [
     'The requested page does not exist.' => '',
     'Hash' => '哈希值',
     'Password' => '密码',
-    'User Id' => '用户id',
+    'Admin Id' => '管理员id',
     'Admin Name' => '管理员名',
     'Ok'=>'成功',
     'Fail'=>'失败',

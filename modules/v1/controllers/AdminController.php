@@ -43,16 +43,28 @@ class AdminController extends DefaultController
     public function actionIndex()
     {
         $searchModel = new AdminSearch();
-        $searchModel->attributes=Yii::$app->request->queryParams;
+        $params=Yii::$app->request->queryParams;
         $result=[];
-        $page=Yii::$app->request->get('page');
-        $limit=Yii::$app->request->get('limit');
-        $error_page=CheckData::checkPage($page,$limit);
+
+        $error_page=CheckData::checkPage($params['page'],$params['limit']);
         if($error_page){
             return Helper::reset([],0,1,$error_page);
         }
+        $error_id=CheckData::checkId(isset($params['id'])?$params['id']:'');
+        if($error_id){
+            return Helper::reset([],0,1,$error_id);
+        }
+        $error_keyword=CheckData::checkAdminKeyword(
+            isset($params['name'])?$params['name']:'',
+        isset($params['real_name'])?$params['real_name']:'',
+        isset($params['phone'])?$params['phone']:'',
+        isset($params['email'])?$params['email']:'');
+        if($error_keyword){
+            return Helper::reset([],0,1,$error_keyword);
+        }
+        $searchModel->load($params);
         if ($searchModel->validate()) {
-            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+            $dataProvider = $searchModel->search($params);
             $result=ArrayHelper::toArray($dataProvider);
             return Helper::reset($result['list'],$result['count'],0);
         }

@@ -4,6 +4,7 @@ return [
     'adminEmail' => 'admin@example.com',
     'senderEmail' => 'noreply@example.com',
     'senderName' => 'Example.com mailer',
+    'page'=>1,
     'pageSize'=>25,
     //雪花算法配置
     'snowflake'=>[
