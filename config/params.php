@@ -5,7 +5,7 @@ return [
     'senderEmail' => 'noreply@example.com',
     'senderName' => 'Example.com mailer',
     'page'=>1,
-    'pageSize'=>25,
+    'limit'=>25,
     //雪花算法配置
     'snowflake'=>[
         'data_center_id'=>0,   //数据中心编号

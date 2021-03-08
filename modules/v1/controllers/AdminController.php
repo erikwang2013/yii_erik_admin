@@ -9,7 +9,8 @@ use Yii,app\modules\v1\model\Admin,
     app\common\CheckData,
     app\common\Helper,
     yii\filters\Cors,
-    app\modules\v1\model\AdminInfo;
+    app\modules\v1\model\AdminInfo,
+    app\modules\v1\validate\AdminValidate;
 
 /**
  * AdminController implements the CRUD actions for Admin model.
@@ -42,33 +43,31 @@ class AdminController extends DefaultController
      */
     public function actionIndex()
     {
-        $searchModel = new AdminSearch();
         $params=Yii::$app->request->queryParams;
-        $result=[];
-
-        $error_page=CheckData::checkPage($params['page'],$params['limit']);
+        $params_config=Yii::$app->params;
+        $page=Yii::$app->request->get('page')?:$params_config['page'];
+        $limit=Yii::$app->request->get('limit')?:$params_config['limit'];
+        $error_page=CheckData::checkPage($page,$limit);
         if($error_page){
             return Helper::reset([],0,1,$error_page);
         }
-        $error_id=CheckData::checkId(isset($params['id'])?$params['id']:'');
-        if($error_id){
-            return Helper::reset([],0,1,$error_id);
-        }
-        $error_keyword=CheckData::checkAdminKeyword(
-            isset($params['name'])?$params['name']:'',
-        isset($params['real_name'])?$params['real_name']:'',
-        isset($params['phone'])?$params['phone']:'',
-        isset($params['email'])?$params['email']:'');
-        if($error_keyword){
+        unset($params['page']); unset($params['limit']);
+        $id=Yii::$app->request->get('id');
+
+        $name=Yii::$app->request->get('name');
+        $real_name=Yii::$app->request->get('real_name');
+        $phone=Yii::$app->request->get('phone');
+        $email=Yii::$app->request->get('email');
+        $error_keyword=AdminValidate:: checkAdminKeyword($name,$real_name,$phone,$email);
+        if ($error_keyword) {
             return Helper::reset([],0,1,$error_keyword);
         }
-        $searchModel->load($params);
-        if ($searchModel->validate()) {
+        $searchModel = new AdminSearch();
             $dataProvider = $searchModel->search($params);
+            $result=[];
             $result=ArrayHelper::toArray($dataProvider);
             return Helper::reset($result['list'],$result['count'],0);
-        }
-        return Helper::reset([],0,1,CheckData::getValidateError($searchModel->errors));
+       
     }
 
 

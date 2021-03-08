@@ -50,17 +50,17 @@ class AdminSearch extends Admin
         $pageSize=isset($params['limit']) && !empty($params['limit'])?$params['limit']:Yii::$app->params['pageSize'];
         $page=isset($params['page']) && !empty($params['page'])?$params['page']:$page;
         $table=Admin::tableName();
-        if($this->id) $query->andFilterWhere([$table.'.id' => $this->id]);
-        if(isset($params['name'])) $query->andFilterWhere(['like',$table.'.name',$params['name']]);
+        $query->andFilterWhere([$table.'.id' =>$params['id']])->andFilterWhere(['like',$table.'.name',$params['name']]);
         $query->joinWith(["adminInfo"=>function($query) use($params){
             $table=AdminInfo::tableName();
-            if(isset($params['real_name'])) return $query->andFilterWhere(['like', $table.'.real_name',$params['real_name']]);
-            if(isset($params['phone'])) return $query->andFilterWhere(['like', $table.'.phone',$params['phone']]);
-            if(isset($params['email'])) return $query->andFilterWhere(['like', $table.'.email',$params['email']]);
+           return $query->andFilterWhere( ['like', $table.'.real_name',$params['real_name']])
+           ->andFilterWhere(['like', $table.'.phone',$params['phone']])
+           ->andFilterWhere(['like', $table.'.email',$params['email']]);
         }]);
 
         $count=$query->count();
         $pages = new Pagination(['totalCount' => $count,'pageSize' => $pageSize,'page'=>$page-1]);
+        //$dataProvider=$query->with("adminInfo")->offset($pages->offset)->limit($pages->limit)->all();
         $dataProvider=$query->offset($pages->offset)->limit($pages->limit)->all();
         foreach($dataProvider as $k=>$v){
             $adminInfo=$v->adminInfo;

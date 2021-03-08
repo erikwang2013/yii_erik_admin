@@ -5,7 +5,8 @@ namespace app\modules\v1\controllers;
 use Yii,
     app\common\CheckData,
     app\common\Helper,
-    app\modules\v1\model\Admin;
+    app\modules\v1\model\Admin,
+    app\modules\v1\validate\AdminValidate;
 
 /**
  * 公用接口
@@ -32,7 +33,7 @@ class PublicController extends DefaultController
         $password=Yii::$app->request->get('password');
         $code=Yii::$app->request->get('code');
         $code_number=Yii::$app->request->get('code_number');
-        $error_login=CheckData::checkLogin($user_name,$password,$code,$code_number);
+        $error_login=AdminValidate::checkLogin($user_name,$password,$code,$code_number);
         if($error_login){
             return Helper::reset([],0,1,$error_login);
         }
