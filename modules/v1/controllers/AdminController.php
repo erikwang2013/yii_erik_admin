@@ -8,6 +8,7 @@ use Yii,app\modules\v1\model\Admin,
     yii\helpers\ArrayHelper,
     app\common\CheckData,
     app\common\Helper,
+    app\common\Snowflake,
     yii\filters\Cors,
     app\modules\v1\model\AdminInfo,
     app\modules\v1\validate\AdminValidate;
@@ -79,27 +80,39 @@ class AdminController extends DefaultController
     public function actionCreate()
     {
         $post=Yii::$app->request->post();
-        $model = new Admin();
+        $model = new Admin(['scenario' => 'create']);
         $transaction = Admin::getDb()->beginTransaction();
         $post['id']=Helper::getCreateId();
         $model->setPassword($post['password']);
-        $model->attributes=$post;
+        $admin_arr=[
+            'id'=>$post['id'],
+            'name'=>$post['name'],
+            'password'=>$post['password'],
+            'password_repeat'=>$post['password_repeat'],
+        ];
+        $model->attributes=$admin_arr;
         if ($model->validate()) {
-            if ($model->save()) {
-                    $info=new AdminInfo();
-                    $info_arr['id']=$post['id'];
-                    if(isset($post['sex'])) $info_arr['sex']=$post['sex'];
-                    if(isset($post['phone']) && empty($post['phone'])) $info_arr['phone']=$post['phone'];
-                    if(isset($post['img']) && empty($post['img'])) $info_arr['img']=$post['img'];
-                    if(isset($post['real_name']) && empty($post['real_name'])) $info_arr['real_name']=$post['real_name'];
-                    if(isset($post['email']) && empty($post['email'])) $info_arr['email']=$post['email'];
+            if ($model->save(false)) {
+                    $info=new AdminInfo(['scenario' => 'create']);
+                    $info_arr=[
+                        'id'=>$post['id'],
+                        'sex'=>$post['sex'],
+                        'phone'=>$post['phone'],
+                        'real_name'=>$post['real_name'],
+                        'email'=>$post['email'],
+                        'img'=>$post['img'],
+                        'create_time'=>date('Y-m-d H:i:s'),
+                        'update_time'=>date('Y-m-d H:i:s')
+                    ];
                     $info->attributes=$info_arr;
                     if($info->validate()){
-                        $info->save();
+                        $info->save(false);
                         $transaction->commit();
                         return Helper::reset([], 0, 0);
                     }
                     $transaction->rollBack();
+                    return Helper::reset([],0,1,CheckData::getValidateError($info->errors));
+                    
             }
         }
             $transaction->rollBack();
@@ -121,26 +134,34 @@ class AdminController extends DefaultController
         if($check_data){
             return Helper::reset([],0,1,$check_data);
         }
-        $model=$this->findModel($id);
+        $post=Yii::$app->request->post();
+       $admin=new Admin(['scenario' => 'update']);
         $transaction = Admin::getDb()->beginTransaction();
-        $post['name']=empty(Yii::$app->request->post('name')) ? $model->name : Yii::$app->request->post('name');
-        $model->attributes=$post;
-        if ($model->validate()) {
-            if ($model->save()) {
-                $info=new AdminInfo();
-                $info_arr['id']=$id;
-                if(isset($post['sex'])) $info_arr['sex']=$post['sex'];
-                if(isset($post['phone']) && empty($post['phone'])) $info_arr['phone']=$post['phone'];
-                if(isset($post['img']) && empty($post['img'])) $info_arr['img']=$post['img'];
-                if(isset($post['real_name']) && empty($post['real_name'])) $info_arr['real_name']=$post['real_name'];
-                if(isset($post['email']) && empty($post['email'])) $info_arr['email']=$post['email'];
-                $info->attributes=$info_arr;
-                if($info->validate()){
-                    $info->save();
-                    $transaction->commit();
-                    return Helper::reset([], 0, 0);
+        $admin->attributes=[
+                'id'=>$id,
+                'name'=> $post['name'],
+                'status'=>$post['status']
+            ];
+        if ($admin->validate()) {
+            $model=$this->findModel($id);
+            $model->name=$post['name'];
+            $model->status=$post['status'];
+            if ($model->save(false)) {
+               $admin_info=new AdminInfo(['scenario' => 'update']);
+               unset($post['name']);unset($post['status']);unset($post['id']);
+               $admin_info->attributes=$post;
+                if($admin_info->validate()){
+                    $info=$this->findInfoModel($id);
+                    $info->sex=$post['sex'];
+                    $info->phone=$post['phone'];
+                    $info->real_name=$post['real_name'];
+                    $info->email=$post['email'];
+                    $info->img=$post['img'];
+                    if($info->save(false)){
+                        $transaction->commit();
+                       return Helper::reset([], 0, 0);
+                    }
                 }
-                $transaction->rollBack();
             }
         }
         $transaction->rollBack();
@@ -181,16 +202,14 @@ class AdminController extends DefaultController
          * @return void
          */
     public function actionResetPassword($id){
-        $check_id=CheckData::checkId($id);
-        if($check_id){
-            return Helper::reset([],0,1,$check_id);
-        }
         $post=Yii::$app->request->post();
-        $model=$this->findModel($id);
-        $model->setPassword($post['password']);
+        $model=new Admin(['scenario' => 'reset_password']);
+        $post['id']=$id;
         $model->attributes=$post;
         if ($model->validate()) {
-            if ($model->save()) {
+            $model_reset=$this->findModel($id);
+            $model_reset->password=$post['password'];
+            if ($model_reset->save(false)) {
                 return Helper::reset([], 0, 0);
             }
         }
@@ -206,6 +225,15 @@ class AdminController extends DefaultController
     protected function findModel($id)
     {
         if (($model = Admin::findOne($id)) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+    }
+
+    protected function findInfoModel($id)
+    {
+        if (($model = AdminInfo::findOne($id)) !== null) {
             return $model;
         }
 

@@ -18,6 +18,8 @@ use Yii;
  */
 class AdminInfo extends \yii\db\ActiveRecord
 {
+    const SCENARIO_ADMIN_INFO_UPDATE='update';
+    const SCENARIO_ADMIN_INFO_CREATE='create';
     /**
      * {@inheritdoc}
      */
@@ -32,22 +34,25 @@ class AdminInfo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['id','email','phone'], 'unique'],
             [['id'], 'required'],
-            [['id', 'sex'], 'integer'],
-            [['id'], 'integer',['max'=>20]],
-            [['phone'],'string',['max'=>11]],
-            [['phone'],'match',['pattern'=>'/^[1][345678][0-9]{9}$/']],
-            [['img','phone'], 'string'],
-            [['create_time', 'update_time'], 'safe'],
-            [['email'],'string',['max'=>60]],
-            [['name','real_name'],'string',['max'=>18]],
+            [['sex'], 'in','range'=>[0,1]],
+            [['id'], 'integer'],
+            [['phone'],'match','pattern'=>'/^[1][345678][0-9]{9}$/'],
+            [['img'], 'string','max'=>200],
+            [['real_name'],'string','max'=>18],
             ['email', 'email'],
-            ['email', 'unique', 'targetClass' => 'app\modules\v1\models\AdminInfo','message'=>Yii::t('app','Email already exists')],
-            ['phone', 'unique', 'targetClass' => 'app\modules\v1\models\AdminInfo','message'=>Yii::t('app','Mobile number already exists')],
-            [['id'], 'unique'],
+            [['email'],'string','max'=>60],
+            [['create_time', 'update_time'], 'safe'],
         ];
     }
-
+    public function scenarios()
+    {
+        return [
+            self::SCENARIO_ADMIN_INFO_UPDATE=>['sex','phone','real_name','email','img'],
+            self::SCENARIO_ADMIN_INFO_CREATE=>['id','sex','phone','real_name','email','img','create_time','update_time'],
+        ];
+    }
     /**
      * {@inheritdoc}
      */

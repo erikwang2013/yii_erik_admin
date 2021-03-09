@@ -66,7 +66,7 @@ class CheckData
             'id'=>Yii::t('app','Admin Id')
         ];
         $validator->setAttributeLabels($attribute)
-        ->addRule(['id'],'integer',['max'=>20])
+        ->addRule(['id'],'integer')
         ->addRule(['id'],'required')
         ->validate();
         if($validator->hasErrors()){
@@ -87,12 +87,13 @@ class CheckData
      * @param [type] $password
      * @return void
      */
-    public static function checkPassword($password){
-        $validator=new DynamicModel(compact('password'));
-        $validator->setAttributeLabels(['password'=>Yii::t('app', 'Password')])
-        ->addRule(['password'],'required')
-        ->addRule(['password'],'filter',[ 'filter' => 'trim'])
-        ->addRule(['password'],'string',['length' => [6, 12]])
+    public static function checkPassword($password,$password_repeat){
+        $validator=new DynamicModel(compact('password','password_repeat'));
+        $validator->setAttributeLabels(['password'=>Yii::t('app', 'Password'),'password_repeat'=>Yii::t('app','Password Repeat')])
+        ->addRule(['password','password_repeat'],'required')
+        ->addRule(['password','password_repeat'],'filter',[ 'filter' => 'trim'])
+        ->addRule(['password','password_repeat'],'string',['length' => [6, 12]])
+        ->addRule('password','compare',['compareAttribute' => 'password_repeat'])
         ->validate();
         if($validator->hasErrors()){
             return self::getValidateError($validator->errors);

@@ -20,6 +20,7 @@ return [
     'The requested page does not exist.' => '',
     'Hash' => '哈希值',
     'Password' => '密码',
+    'Password Repeat'=>'重复密码',
     'Admin Id' => '管理员id',
     'Admin Name' => '管理员名',
     'Ok'=>'成功',

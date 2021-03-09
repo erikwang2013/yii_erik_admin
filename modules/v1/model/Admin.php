@@ -14,7 +14,9 @@ use Yii;
  */
 class Admin extends \yii\db\ActiveRecord
 {
-    //const SCENARIO_RESET_PASSWORD= 'reset_password';
+    const SCENARIO_ADMIN_RESET_PASSWORD= 'reset_password';
+    const SCENARIO_ADMIN_UPDATE= 'update';
+    const SCENARIO_ADMIN_CREATE= 'create';
     public $password_repeat;
     /**
      * {@inheritdoc}
@@ -37,16 +39,18 @@ class Admin extends \yii\db\ActiveRecord
             [['access_token'],'string','max'=>60],
             [['password','password_repeat'],'string','length' => [6, 12]],
             ['password', 'compare', 'compareAttribute' => 'password_repeat','message'=>Yii::t('app','The two passwords are inconsistent')],
-            [['id'], 'unique'],
+            [['id'], 'unique','on'=>['create']],
         ];
     }
 
-    // public function scenarios()
-    // {
-    //     return [
-    //         self::SCENARIO_RESET_PASSWORD => ['id', 'password'],
-    //     ];
-    // }
+    public function scenarios()
+    {
+        return [
+            self::SCENARIO_ADMIN_RESET_PASSWORD => ['password','password_repeat'],
+            self::SCENARIO_ADMIN_UPDATE=>['name','status','id'],
+            self::SCENARIO_ADMIN_CREATE=>['id','name','password','password_repeat'],
+        ];
+    }
     /**
      * {@inheritdoc}
      */
