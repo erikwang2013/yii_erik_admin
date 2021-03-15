@@ -20,6 +20,7 @@ class AdminInfo extends \yii\db\ActiveRecord
 {
     const SCENARIO_ADMIN_INFO_UPDATE='update';
     const SCENARIO_ADMIN_INFO_CREATE='create';
+    const SCENARIO_ADMIN_INFO_SEARCH='search';
     /**
      * {@inheritdoc}
      */
@@ -34,8 +35,8 @@ class AdminInfo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id','email','phone'], 'unique'],
-            [['id'], 'required'],
+            [['id','email','phone'], 'unique','on'=>['create','update']],
+            [['id'], 'required','on'=>['create','update']],
             [['sex'], 'in','range'=>[0,1]],
             [['id'], 'integer'],
             [['phone'],'match','pattern'=>'/^[1][345678][0-9]{9}$/'],
@@ -51,6 +52,7 @@ class AdminInfo extends \yii\db\ActiveRecord
         return [
             self::SCENARIO_ADMIN_INFO_UPDATE=>['sex','phone','real_name','email','img'],
             self::SCENARIO_ADMIN_INFO_CREATE=>['id','sex','phone','real_name','email','img','create_time','update_time'],
+            self::SCENARIO_ADMIN_INFO_SEARCH=>['real_name','phone','email']
         ];
     }
     /**

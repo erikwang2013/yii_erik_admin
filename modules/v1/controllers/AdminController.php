@@ -48,27 +48,31 @@ class AdminController extends DefaultController
         $params_config=Yii::$app->params;
         $page=Yii::$app->request->get('page')?:$params_config['page'];
         $limit=Yii::$app->request->get('limit')?:$params_config['limit'];
-        $error_page=CheckData::checkPage($page,$limit);
-        if($error_page){
-            return Helper::reset([],0,1,$error_page);
+        $error_page=CheckData::checkPage($page, $limit);
+        if ($error_page) {
+            return Helper::reset([], 0, 1, $error_page);
         }
-        unset($params['page']); unset($params['limit']);
-        $id=Yii::$app->request->get('id');
-
-        $name=Yii::$app->request->get('name');
-        $real_name=Yii::$app->request->get('real_name');
-        $phone=Yii::$app->request->get('phone');
-        $email=Yii::$app->request->get('email');
-        $error_keyword=AdminValidate:: checkAdminKeyword($name,$real_name,$phone,$email);
-        if ($error_keyword) {
-            return Helper::reset([],0,1,$error_keyword);
+        $model = new Admin(['scenario' => 'search']);
+        $model->attributes=[
+            'name'=>$params['name'],
+            'id'=>$params['id']
+        ];
+        if ($model->validate()) {
+            $model_info=new AdminInfo(['scenario' => 'search']);
+            $model_info->attributes=[
+                'real_name'=>$params['real_name'],
+                'email'=>$params['email'],
+                'phone'=>$params['phone']
+            ];
+            if( $model_info->validate()){
+                $dataProvider = $model->search($params);
+                $result=[];
+                $result=ArrayHelper::toArray($dataProvider);
+                return Helper::reset($result['list'], $result['count'], 0);
+            }
+            return Helper::reset([],0,1,CheckData::getValidateError($model_info->errors));
         }
-        $searchModel = new AdminSearch();
-            $dataProvider = $searchModel->search($params);
-            $result=[];
-            $result=ArrayHelper::toArray($dataProvider);
-            return Helper::reset($result['list'],$result['count'],0);
-       
+        return Helper::reset([],0,1,CheckData::getValidateError($model->errors));
     }
 
 
