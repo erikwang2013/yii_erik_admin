@@ -4,7 +4,6 @@ namespace app\modules\v1\controllers;
 
 use Yii,
     app\modules\v1\model\AdminAuthority,
-    app\modules\v1\models\AdminAuthoritySearch,
     app\modules\v1\controllers\DefaultController,
     yii\web\NotFoundHttpException,
     app\common\CheckData,
@@ -45,21 +44,33 @@ class AdminAuthorityController extends DefaultController
      */
     public function actionIndex()
     {
-        $searchModel = new AdminAuthoritySearch();
-        $searchModel->attributes=Yii::$app->request->queryParams;
-        $result=[];
-        $page=Yii::$app->request->get('page');
-        $limit=Yii::$app->request->get('limit');
+
+        $params=Yii::$app->request->queryParams;
+        $params_config=Yii::$app->params;
+        $page=Yii::$app->request->get('page')?:$params_config['page'];
+        $limit=Yii::$app->request->get('limit')?:$params_config['limit'];
         $error_page=CheckData::checkPage($page,$limit);
         if($error_page){
             return Helper::reset([],0,1,$error_page);
         }
-        if ($searchModel->validate()) {
-            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        unset($params['page']);unset($params['limit']);
+        $params['page']=$page;
+        $params['limit']=$limit;
+        $model = new AdminAuthority(['scenario' => 'search']);
+        $model->attributes=[
+            'id'=>$params['id'],
+            'name'=>$params['name'],
+            'parent_id'=>$params['parent_id'],
+            'show'=>$params['show'],
+            'status'=>$params['status'],
+        ];
+        $result=[];
+        if ($model->validate()) {
+            $dataProvider = $model->search($params);
             $result=ArrayHelper::toArray($dataProvider);
             return Helper::reset($result['list'],$result['count'],0);
         }
-        return Helper::reset([],0,1,CheckData::getValidateError($searchModel->errors));
+        return Helper::reset([],0,1,CheckData::getValidateError($model->errors));
     }
 
 

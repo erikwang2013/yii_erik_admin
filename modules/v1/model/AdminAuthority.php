@@ -2,7 +2,8 @@
 
 namespace app\modules\v1\model;
 
-use Yii;
+use Yii,
+    yii\data\Pagination;
 
 /**
  * This is the model class for table "{{%admin_authority}}".
@@ -16,6 +17,9 @@ use Yii;
  */
 class AdminAuthority extends \yii\db\ActiveRecord
 {
+    const SCENARIO_ADMIN_AUTHORITY_UPDATE='update';
+    const SCENARIO_ADMIN_AUTHORITY_CREATE='create';
+    const SCENARIO_ADMIN_AUTHORITY_SEARCH='search';
     /**
      * {@inheritdoc}
      */
@@ -30,14 +34,23 @@ class AdminAuthority extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'name'], 'required'],
-            [['id', 'parent_id', 'show', 'status'], 'integer'],
+            [['id', 'name'], 'required','on'=>['create','update']],
+            [['id', 'parent_id', 'show', 'status'], 'integer','on'=>['create','update','search']],
             [['code'], 'string', 'max' => 20],
             [['name'], 'string', 'max' => 100],
-            [['id'], 'unique'],
+            [['id'], 'unique','on'=>['create','update']],
+            [['show'], 'in','range'=>[0,1]],
+            [['status'], 'in','range'=>[0,1]],
         ];
     }
-
+    public function scenarios()
+    {
+        return [
+            self::SCENARIO_ADMIN_AUTHORITY_UPDATE=>['name','status','id','code','show','parent_id'],
+            self::SCENARIO_ADMIN_AUTHORITY_CREATE=>['id','name','parent_id','show','status','code'],
+            self::SCENARIO_ADMIN_AUTHORITY_SEARCH=>['id','name','parent_id','show','status']
+        ];
+    }
     /**
      * {@inheritdoc}
      */
@@ -50,6 +63,25 @@ class AdminAuthority extends \yii\db\ActiveRecord
             'name' => Yii::t('app', 'Authority Name'),
             'show' => Yii::t('app', 'Authority Show'),
             'status' => Yii::t('app', 'Authority Status'),
+        ];
+    }
+
+    public function search($params=[]){
+        $query = $this->find();
+        $pageSize=$params['limit'];
+        $page=$params['page'];
+        $query->andFilterWhere(['id' =>$params['id']])
+            ->andFilterWhere(['parent_id' =>$params['parent_id']])
+            ->andFilterWhere(['show' =>$params['show']])
+            ->andFilterWhere(['status' =>$params['status']])
+            ->andFilterWhere( ['like', 'name',$params['name']]);
+        $count=$query->count();
+        $page=$page-1>=0?$page-1:0;
+        $pages = new Pagination(['totalCount' => $count,'pageSize' => $pageSize,'page'=>$page]);
+        $dataProvider=$query->offset($pages->offset)->limit($pages->limit)->all();
+        return [
+            'list'=>$dataProvider,
+            'count'=>(int)$count
         ];
     }
 }

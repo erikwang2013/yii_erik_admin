@@ -52,6 +52,9 @@ class AdminController extends DefaultController
         if ($error_page) {
             return Helper::reset([], 0, 1, $error_page);
         }
+        unset($params['page']);unset($params['limit']);
+        $params['page']=$page;
+        $params['limit']=$limit;
         $model = new Admin(['scenario' => 'search']);
         $model->attributes=[
             'name'=>$params['name'],
