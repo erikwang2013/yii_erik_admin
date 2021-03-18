@@ -44,18 +44,21 @@ class AdminAuthorityController extends DefaultController
      */
     public function actionIndex()
     {
-
-        $params=Yii::$app->request->queryParams;
         $params_config=Yii::$app->params;
-        $page=Yii::$app->request->get('page')?:$params_config['page'];
-        $limit=Yii::$app->request->get('limit')?:$params_config['limit'];
-        $error_page=CheckData::checkPage($page,$limit);
+        $params=[
+            'id'=>Yii::$app->request->get('id'),
+            'name'=>Yii::$app->request->get('name',''),
+            'parent_id'=>Yii::$app->request->get('parent_id'),
+            'show'=>Yii::$app->request->get('show'),
+            'status'=>Yii::$app->request->get('status'),
+            'code'=>Yii::$app->request->get('code',''),
+            'page'=>Yii::$app->request->get('page',$params_config['page']),
+            'limit'=>Yii::$app->request->get('limit',$params_config['limit'])
+        ];
+        $error_page=CheckData::checkPage($params['page'],$params['limit']);
         if($error_page){
             return Helper::reset([],0,1,$error_page);
         }
-        unset($params['page']);unset($params['limit']);
-        $params['page']=$page;
-        $params['limit']=$limit;
         $model = new AdminAuthority(['scenario' => 'search']);
         $model->attributes=[
             'id'=>$params['id'],
@@ -81,15 +84,25 @@ class AdminAuthorityController extends DefaultController
      */
     public function actionCreate()
     {
-        $model = new AdminAuthority();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $post=Yii::$app->request->post();
+        $post['parent_id']=Yii::$app->request->post('parent_id',0);
+        $model = new AdminAuthority(['scenario' => 'create']);
+        $post['id']=Helper::getCreateId();
+        $model->attributes=[
+            'id'=>$post['id'],
+            'parent_id'=>$post['parent_id'],
+            'code'=>$post['code'],
+            'name'=>$post['name'],
+            'show'=>$post['show'],
+            'status'=>$post['status'],
+        ];
+        if ($model->validate()) {
+            if ($model->save(false)) {
+                return Helper::reset([], 0, 0);
+            }
+            return Helper::reset([],0,1,$model->errors);
         }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        return Helper::reset([],0,1,CheckData::getValidateError($model->errors));
     }
 
     /**
@@ -101,15 +114,40 @@ class AdminAuthorityController extends DefaultController
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $params=Yii::$app->request->post();
+        if(count($params)==0){
+            return Helper::reset([],0,1,Yii::t('app','Update at least one data'));
         }
+        $post=[
+            'parent_id'=>Yii::$app->request->post('parent_id'),
+            'code'=>Yii::$app->request->post('code'),
+            'name'=>Yii::$app->request->post('name'),
+            'show'=>Yii::$app->request->post('show'),
+            'status'=>Yii::$app->request->post('status'),
+        ];
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+        $model = new AdminAuthority(['scenario' => 'update']);
+        $model->attributes=[
+            'id'=>$id,
+            'parent_id'=>$post['parent_id'],
+            'code'=>$post['code'],
+            'name'=>$post['name'],
+            'show'=>$post['show'],
+            'status'=>$post['status'],
+        ];
+        if ($model->validate()) {
+            $update = $this->findModel($id);
+            if(isset($post['parent_id'])) $update ->parent_id=$post['parent_id'];
+            if(isset($post['name'])) $update ->name=$post['name'];
+            if(isset($post['code'])) $update ->code=$post['code'];
+            if(isset($post['show'])) $update ->show=$post['show'];
+            if(isset($post['status'])) $update ->status=$post['status'];
+            if ($update->save(false)) {
+                return Helper::reset([], 0, 0);
+            }
+            return Helper::reset([],0,1,$update->errors);
+        }
+        return Helper::reset([],0,1,CheckData::getValidateError($model->errors));
     }
 
     /**
@@ -121,9 +159,18 @@ class AdminAuthorityController extends DefaultController
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        $id=explode(',',$id);
+        foreach($id as $k=>$v){
+            $check_data=CheckData::checkId($v);
+            if($check_data){
+                return Helper::reset([],0,1,$check_data);
+            }
+        }
+        $model = new AdminAuthority();
+        if($model->deleteAll(['id'=>$id])){
+            return Helper::reset([],0,0);
+        }
+        return Helper::reset([],0,1,$model->errors);
     }
 
     /**

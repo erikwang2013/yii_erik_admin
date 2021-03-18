@@ -17,7 +17,6 @@ class DefaultController extends Controller
     {
         parent::init();
     }
-
     // public function behaviors()
     // {
     //     return [

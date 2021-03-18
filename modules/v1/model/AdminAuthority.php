@@ -34,11 +34,13 @@ class AdminAuthority extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'name'], 'required','on'=>['create','update']],
+            [['id', 'name'], 'required','on'=>['create']],
+            [['code','name','parent_id','show','status'],'required','on'=>['create']],
             [['id', 'parent_id', 'show', 'status'], 'integer','on'=>['create','update','search']],
+            ['id', 'compare', 'compareValue' => 0, 'operator' => '>'],
             [['code'], 'string', 'max' => 20],
             [['name'], 'string', 'max' => 100],
-            [['id'], 'unique','on'=>['create','update']],
+            [['id'], 'unique','on'=>['create']],
             [['show'], 'in','range'=>[0,1]],
             [['status'], 'in','range'=>[0,1]],
         ];
@@ -74,7 +76,8 @@ class AdminAuthority extends \yii\db\ActiveRecord
             ->andFilterWhere(['parent_id' =>$params['parent_id']])
             ->andFilterWhere(['show' =>$params['show']])
             ->andFilterWhere(['status' =>$params['status']])
-            ->andFilterWhere( ['like', 'name',$params['name']]);
+            ->andFilterWhere( ['like', 'name',$params['name']])
+            ->andFilterWhere(['like', 'code',$params['code']]);
         $count=$query->count();
         $page=$page-1>=0?$page-1:0;
         $pages = new Pagination(['totalCount' => $count,'pageSize' => $pageSize,'page'=>$page]);

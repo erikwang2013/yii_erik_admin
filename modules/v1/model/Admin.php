@@ -37,8 +37,9 @@ class Admin extends \yii\db\ActiveRecord
         return [
             [['id', 'name','password','password_repeat'], 'required','on'=>['create','update']],
             [['id','status'], 'integer'], 
+            ['id', 'compare', 'compareValue' => 0, 'operator' => '>'],
             ['status','in','range'=>[0,1]],
-            [['name'], 'string', 'length' => [4,15],'on'=>['create','update']],
+            [['name'], 'string', 'length' => [2,15]],
             [['access_token'],'string','max'=>60],
             [['password','password_repeat'],'string','length' => [6, 12]],
             ['password', 'compare', 'compareAttribute' => 'password_repeat','message'=>Yii::t('app','The two passwords are inconsistent')],
@@ -104,7 +105,8 @@ class Admin extends \yii\db\ActiveRecord
             $table=AdminInfo::tableName();
            return $query->andFilterWhere( ['like', $table.'.real_name',$params['real_name']])
            ->andFilterWhere(['like', $table.'.phone',$params['phone']])
-           ->andFilterWhere(['like', $table.'.email',$params['email']]);
+           ->andFilterWhere(['like', $table.'.email',$params['email']])
+           ->andFilterWhere([$table.'.sex' =>$params['sex']]);
         }]);
 
         $count=$query->count();

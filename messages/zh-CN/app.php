@@ -64,5 +64,6 @@ return [
     'Role Name'=>'角色名称',
     'Role Status'=>'角色状态',
     'Create Time'=>'创建时间',
-
+    'Update at least one data'=>'至少更新一个数据',
+    'Request ID cannot be empty'=>'请求id不能为空',
 ];

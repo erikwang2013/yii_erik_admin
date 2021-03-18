@@ -44,17 +44,21 @@ class AdminController extends DefaultController
      */
     public function actionIndex()
     {
-        $params=Yii::$app->request->queryParams;
         $params_config=Yii::$app->params;
-        $page=Yii::$app->request->get('page')?:$params_config['page'];
-        $limit=Yii::$app->request->get('limit')?:$params_config['limit'];
-        $error_page=CheckData::checkPage($page, $limit);
+        $params=[
+            'id'=>Yii::$app->request->get('id'),
+            'name'=>Yii::$app->request->get('name',''),
+            'real_name'=>Yii::$app->request->get('real_name',''),
+            'phone'=>Yii::$app->request->get('phone',''),
+            'email'=>Yii::$app->request->get('email',''),
+            'sex'=>Yii::$app->request->get('sex'),
+            'page'=>Yii::$app->request->get('page',$params_config['page']),
+            'limit'=>Yii::$app->request->get('limit',$params_config['limit'])
+        ];
+        $error_page=CheckData::checkPage($params['page'], $params['limit']);
         if ($error_page) {
             return Helper::reset([], 0, 1, $error_page);
         }
-        unset($params['page']);unset($params['limit']);
-        $params['page']=$page;
-        $params['limit']=$limit;
         $model = new Admin(['scenario' => 'search']);
         $model->attributes=[
             'name'=>$params['name'],
@@ -65,7 +69,8 @@ class AdminController extends DefaultController
             $model_info->attributes=[
                 'real_name'=>$params['real_name'],
                 'email'=>$params['email'],
-                'phone'=>$params['phone']
+                'phone'=>$params['phone'],
+                'sex'=>$params['sex']
             ];
             if( $model_info->validate()){
                 $dataProvider = $model->search($params);
@@ -91,13 +96,12 @@ class AdminController extends DefaultController
         $transaction = Admin::getDb()->beginTransaction();
         $post['id']=Helper::getCreateId();
         $model->setPassword($post['password']);
-        $admin_arr=[
+        $model->attributes=[
             'id'=>$post['id'],
             'name'=>$post['name'],
             'password'=>$post['password'],
             'password_repeat'=>$post['password_repeat'],
         ];
-        $model->attributes=$admin_arr;
         if ($model->validate()) {
             if ($model->save(false)) {
                     $info=new AdminInfo(['scenario' => 'create']);
@@ -113,16 +117,20 @@ class AdminController extends DefaultController
                     ];
                     $info->attributes=$info_arr;
                     if($info->validate()){
-                        $info->save(false);
-                        $transaction->commit();
-                        return Helper::reset([], 0, 0);
+                       if($info->save(false)){
+                            $transaction->commit();
+                            return Helper::reset([], 0, 0);
+                       }
+                       $transaction->rollBack();
+                        return Helper::reset([],0,1,$info->errors);
                     }
                     $transaction->rollBack();
                     return Helper::reset([],0,1,CheckData::getValidateError($info->errors));
-                    
             }
-        }
             $transaction->rollBack();
+            return Helper::reset([],0,1,$model->errors);
+        }
+        $transaction->rollBack();
         return Helper::reset([],0,1,CheckData::getValidateError($model->errors));
     }
 
@@ -137,11 +145,19 @@ class AdminController extends DefaultController
      * @return void
      */
     public function actionUpdate($id){
-        $check_data=CheckData::checkId($id);
-        if($check_data){
-            return Helper::reset([],0,1,$check_data);
+        $params=Yii::$app->request->post();
+        if(count($params)==0){
+            return Helper::reset([],0,1,Yii::t('app','Update at least one data'));
         }
-        $post=Yii::$app->request->post();
+        $post=[
+            'name'=>Yii::$app->request->post('name',''),
+            'sex'=>Yii::$app->request->post('sex'),
+            'status'=>Yii::$app->request->post('status'),
+            'phone'=>Yii::$app->request->post('phone'),
+            'real_name'=>Yii::$app->request->post('real_name',''),
+            'email'=>Yii::$app->request->post('email',''),
+            'img'=>Yii::$app->request->post('img',''),
+        ];
        $admin=new Admin(['scenario' => 'update']);
         $transaction = Admin::getDb()->beginTransaction();
         $admin->attributes=[
@@ -151,28 +167,44 @@ class AdminController extends DefaultController
             ];
         if ($admin->validate()) {
             $model=$this->findModel($id);
-            $model->name=$post['name'];
-            $model->status=$post['status'];
+            if(isset($post['name'])) $model->name=$post['name'];
+            if(isset($post['status'])) $model->status=$post['status'];
             if ($model->save(false)) {
+                unset($params['name']); unset($params['name']);
+                if(count($params)==0){
+                    $transaction->commit();
+                    return Helper::reset([], 0, 0);
+                }
                $admin_info=new AdminInfo(['scenario' => 'update']);
-               unset($post['name']);unset($post['status']);unset($post['id']);
-               $admin_info->attributes=$post;
+               $admin_info->attributes=[
+                   'sex'=>$post['sex'],
+                   'phone'=>$post['phone'],
+                   'real_name'=>$post['real_name'],
+                   'email'=>$post['email'],
+                   'img'=>$post['img']
+               ];
                 if($admin_info->validate()){
                     $info=$this->findInfoModel($id);
-                    $info->sex=$post['sex'];
-                    $info->phone=$post['phone'];
-                    $info->real_name=$post['real_name'];
-                    $info->email=$post['email'];
-                    $info->img=$post['img'];
+                    if(isset($post['sex'])) $info->sex=$post['sex'];
+                    if(isset($post['phone'])) $info->phone=$post['phone'];
+                    if(isset($post['real_name'])) $info->real_name=$post['real_name'];
+                    if(isset($post['email'])) $info->email=$post['email'];
+                    if(isset($post['img'])) $info->img=$post['img'];
                     if($info->save(false)){
                         $transaction->commit();
                        return Helper::reset([], 0, 0);
                     }
+                    $transaction->rollBack();
+                    return Helper::reset([],0,1,$info->errors);
                 }
+                $transaction->rollBack();
+                return Helper::reset([],0,1,CheckData::getValidateError($admin_info->errors));
             }
+            $transaction->rollBack();
+            return Helper::reset([],0,1,$model->errors);
         }
         $transaction->rollBack();
-        return Helper::reset([],0,1,CheckData::getValidateError($model->errors));
+        return Helper::reset([],0,1,CheckData::getValidateError($admin->errors));
     }
     /**
      * Deletes an existing Admin model.
@@ -183,7 +215,6 @@ class AdminController extends DefaultController
      */
     public function actionDelete($id)
     {
-        if(empty($id))  return Helper::reset([],0,1,Yii::t('app','Request parameter cannot be empty!'));
         $id=explode(',',$id);
         foreach($id as $k=>$v){
             $check_data=CheckData::checkId($v);
@@ -192,11 +223,19 @@ class AdminController extends DefaultController
             }
         }
         $model = new Admin();
+        $transaction = Admin::getDb()->beginTransaction();
         if($model->deleteAll(['id'=>$id])){
             $info=new AdminInfo();
-            $info->deleteAll(['id'=>$id]);
+            if($info->deleteAll(['id'=>$id])){
+                $transaction->commit();
+                return Helper::reset([],0,0);
+            }
+            $transaction->rollBack();
+            return Helper::reset([],0,1,$info->errors);
         }
-        return Helper::reset([],0,0);
+        $transaction->rollBack();
+        return Helper::reset([],0,1,$model->errors);
+        
     }
 
         /**
