@@ -111,6 +111,12 @@ class Admin extends \yii\db\ActiveRecord
         }]);
 
         $count=$query->count();
+        if($count==0){
+            return [
+                'list'=>[],
+                'count'=>(int)$count
+            ];
+        }
         $page=$page-1>=0?$page-1:0;
         $pages = new Pagination(['totalCount' => $count,'pageSize' => $pageSize,'page'=>$page]);
         $dataProvider=$query->offset($pages->offset)->limit($pages->limit)->all();

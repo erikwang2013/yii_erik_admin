@@ -66,4 +66,6 @@ return [
     'Create Time'=>'创建时间',
     'Update at least one data'=>'至少更新一个数据',
     'Request ID cannot be empty'=>'请求id不能为空',
+    'Hide'=>'隐藏',
+    'Display'=>'显示',
 ];

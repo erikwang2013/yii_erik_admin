@@ -68,6 +68,10 @@ class AdminAuthority extends \yii\db\ActiveRecord
         ];
     }
 
+    public function getName($id){
+        $query = $this->findOne($id);
+        return $query['name'];
+    }
     public function search($params=[]){
         $query = $this->find();
         $pageSize=$params['limit'];
@@ -79,9 +83,34 @@ class AdminAuthority extends \yii\db\ActiveRecord
             ->andFilterWhere( ['like', 'name',$params['name']])
             ->andFilterWhere(['like', 'code',$params['code']]);
         $count=$query->count();
+        if($count==0){
+            return [
+                'list'=>[],
+                'count'=>(int)$count
+            ];
+        }
         $page=$page-1>=0?$page-1:0;
         $pages = new Pagination(['totalCount' => $count,'pageSize' => $pageSize,'page'=>$page]);
         $dataProvider=$query->offset($pages->offset)->limit($pages->limit)->all();
+        foreach($dataProvider as $k=>$v){
+            $dataProvider[$k]=[
+                'id'=>$v->id,
+                'name'=>$v->name,
+                'code'=>$v->code,
+                'status'=>[
+                    'key'=>$v->status,
+                    'value'=>$v->status?Yii::t('app','Off'):Yii::t('app','On')
+                ],
+                'show'=>[
+                    'key'=>$v->show,
+                    'value'=>$v->show?Yii::t('app','Hide'):Yii::t('app','Display')
+                ],
+                'parent_id'=>[
+                    'key'=>$v->parent_id,
+                    'value'=>$v->parent_id>0?$this->getName($v->parent_id):'—',
+                ]
+            ];
+        }
         return [
             'list'=>$dataProvider,
             'count'=>(int)$count

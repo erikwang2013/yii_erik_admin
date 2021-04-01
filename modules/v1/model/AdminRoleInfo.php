@@ -70,9 +70,26 @@ class AdminRoleInfo extends \yii\db\ActiveRecord
             ->andFilterWhere(['status' =>$params['status']])
             ->andFilterWhere( ['like', 'name',$params['name']]);
         $count=$query->count();
+        if($count==0){
+            return [
+                'list'=>[],
+                'count'=>(int)$count
+            ];
+        }
         $page=$page-1>=0?$page-1:0;
         $pages = new Pagination(['totalCount' => $count,'pageSize' => $pageSize,'page'=>$page]);
         $dataProvider=$query->offset($pages->offset)->limit($pages->limit)->all();
+        foreach($dataProvider as $k=>$v){
+            $dataProvider[$k]=[
+                'id'=>$v->id,
+                'name'=>$v->name,
+                'create_time'=>$v->create_time,
+                'status'=>[
+                    'key'=>$v->status,
+                    'value'=>$v->status?Yii::t('app','Off'):Yii::t('app','On')
+                ]
+            ];
+        }
         return [
             'list'=>$dataProvider,
             'count'=>(int)$count
