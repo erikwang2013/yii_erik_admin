@@ -4,7 +4,6 @@ namespace app\modules\v1\controllers;
 
 use Yii,
     app\modules\v1\model\AdminRoleInfo,
-    app\modules\v1\models\AdminRoleInfoSearch,
     app\modules\v1\controllers\DefaultController,
     yii\web\NotFoundHttpException,
     app\common\CheckData,
@@ -17,27 +16,7 @@ use Yii,
  */
 class AdminRoleInfoController extends DefaultController
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        $controller=Yii::$app->controller->id;
-       $config=Yii::$app->params['controller_cors'];
-       $config_data=$config[$controller];
-        return ArrayHelper::merge([
-            [
-                'class' => Cors::className(),
-                'cors' => [
-                            'Origin' =>$config_data['cors']['origin'],                  //允许来源的数组
-                            'Access-Control-Request-Method' =>$config_data['cors']['request'],     //允许动作
-                ],
-                // 'actions' => [
-                //    $config_data['actions']
-                // ]
-            ],
-        ], parent::behaviors());
-    }
+
 
     /**
      * Lists all AdminRoleInfo models.
@@ -45,7 +24,7 @@ class AdminRoleInfoController extends DefaultController
      */
     public function actionIndex()
     {
-        $searchModel = new AdminRoleInfoSearch();
+        $searchModel = new AdminRoleInfo();
         $searchModel->attributes=Yii::$app->request->queryParams;
         $result=[];
         $page=Yii::$app->request->get('page');

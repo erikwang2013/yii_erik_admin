@@ -19,24 +19,6 @@ use Yii,app\modules\v1\model\Admin,
 class AdminController extends DefaultController
 {
 
-    public function behaviors()
-    {
-        $controller=Yii::$app->controller->id;
-       $config=Yii::$app->params['controller_cors'];
-       $config_data=$config[$controller];
-        return ArrayHelper::merge([
-            [
-                'class' => Cors::className(),
-                'cors' => [
-                            'Origin' =>$config_data['cors']['origin'],                  //允许来源的数组
-                            'Access-Control-Request-Method' =>$config_data['cors']['request'],     //允许动作
-                ],
-                // 'actions' => [
-                //    $config_data['actions']
-                // ]
-            ],
-        ], parent::behaviors());
-    }
 
     /**
      * Lists all Admin models.
