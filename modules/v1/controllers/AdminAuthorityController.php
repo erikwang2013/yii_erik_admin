@@ -94,34 +94,24 @@ class AdminAuthorityController extends DefaultController
      */
     public function actionUpdate($id)
     {
-        $params=Yii::$app->request->post();
-        if(count($params)==0){
+        $post=Yii::$app->request->post();
+        if(count($post)==0){
             return Helper::reset([],0,1,Yii::t('app','Update at least one data'));
         }
-        $post=[
-            'parent_id'=>Yii::$app->request->post('parent_id'),
-            'code'=>Yii::$app->request->post('code'),
-            'name'=>Yii::$app->request->post('name'),
-            'show'=>Yii::$app->request->post('show'),
-            'status'=>Yii::$app->request->post('status'),
-        ];
-
-        $model = new AdminAuthority(['scenario' => 'update']);
-        $model->attributes=[
-            'id'=>$id,
-            'parent_id'=>$post['parent_id'],
-            'code'=>$post['code'],
-            'name'=>$post['name'],
-            'show'=>$post['show'],
-            'status'=>$post['status'],
-        ];
+        $model =new AdminAuthority(['scenario' => 'update']);
+        $update_data=$post;
+        $post['id']=$id;
+        $model->attributes=$post;
         if ($model->validate()) {
             $update = $this->findModel($id);
-            if(isset($post['parent_id'])) $update ->parent_id=$post['parent_id'];
-            if(isset($post['name'])) $update ->name=$post['name'];
-            if(isset($post['code'])) $update ->code=$post['code'];
-            if(isset($post['show'])) $update ->show=$post['show'];
-            if(isset($post['status'])) $update ->status=$post['status'];
+            $attributes = array_flip($update->safeAttributes() ? $update->safeAttributes() : $update->attributes());
+            foreach($update_data as $name=>$value){
+                if (isset($attributes[$name])) {
+                    $update->$name=$value;
+                }else{
+                    $update->onUnsafeAttribute($name, $value);
+                }
+            }
             if ($update->save(false)) {
                 return Helper::reset([], 0, 0);
             }

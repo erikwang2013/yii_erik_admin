@@ -35,7 +35,8 @@ class Admin extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'name','password','password_repeat'], 'required','on'=>['create','update']],
+            [['id'], 'required','on'=>['create','update']],
+            [['name','password','password_repeat'], 'required','on'=>['create']],
             [['id','status'], 'integer'], 
             ['id', 'compare', 'compareValue' => 0, 'operator' => '>'],
             ['status','in','range'=>[0,1]],

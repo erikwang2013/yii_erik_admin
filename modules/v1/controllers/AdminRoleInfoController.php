@@ -24,21 +24,31 @@ class AdminRoleInfoController extends DefaultController
      */
     public function actionIndex()
     {
-        $searchModel = new AdminRoleInfo();
-        $searchModel->attributes=Yii::$app->request->queryParams;
-        $result=[];
-        $page=Yii::$app->request->get('page');
-        $limit=Yii::$app->request->get('limit');
-        $error_page=CheckData::checkPage($page,$limit);
+        
+        $params_config=Yii::$app->params;
+        $params=[
+            'id'=>Yii::$app->request->get('id'),
+            'name'=>Yii::$app->request->get('name',''),
+            'status'=>Yii::$app->request->get('status'),
+            'page'=>Yii::$app->request->get('page',$params_config['page']),
+            'limit'=>Yii::$app->request->get('limit',$params_config['limit'])
+        ];
+        $error_page=CheckData::checkPage($params['page'],$params['limit']);
         if($error_page){
             return Helper::reset([],0,1,$error_page);
         }
-        if ($searchModel->validate()) {
-            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $model = new AdminRoleInfo(['scenario' => 'search']);
+        $model->attributes=[
+            'id'=>$params['id'],
+            'name'=>$params['name'],
+            'status'=>$params['status'],
+        ];
+        if ($model->validate()) {
+            $dataProvider = $model->search($params);
             $result=ArrayHelper::toArray($dataProvider);
             return Helper::reset($result['list'],$result['count'],0);
         }
-        return Helper::reset([],0,1,CheckData::getValidateError($searchModel->errors));
+        return Helper::reset([],0,1,CheckData::getValidateError($model->errors));
     }
 
     /**
@@ -48,15 +58,22 @@ class AdminRoleInfoController extends DefaultController
      */
     public function actionCreate()
     {
-        $model = new AdminRoleInfo();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $post=Yii::$app->request->post();
+        $model = new AdminRoleInfo(['scenario' => 'create']);
+        $post['id']=Helper::getCreateId();
+        $model->attributes=[
+            'id'=>$post['id'],
+            'name'=>$post['name'],
+            'status'=>$post['status'],
+            'create_time'=>date('Y-m-d H:i:s')
+        ];
+        if ($model->validate()) {
+            if ($model->save(false)) {
+                return Helper::reset([], 0, 0);
+            }
+            return Helper::reset([],0,1,$model->errors);
         }
-
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        return Helper::reset([],0,1,CheckData::getValidateError($model->errors));
     }
 
     /**
@@ -68,15 +85,30 @@ class AdminRoleInfoController extends DefaultController
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $post=Yii::$app->request->post();
+        if(count($post)==0){
+            return Helper::reset([],0,1,Yii::t('app','Update at least one data'));
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+        $model = new AdminRoleInfo(['scenario' => 'update']);
+        $update_data=$post;
+        $post['id']=$id;
+        $model->attributes=$post;
+        if ($model->validate()) {
+            $update = $this->findModel($id);
+            $attributes = array_flip($update->safeAttributes() ? $update->safeAttributes() : $update->attributes());
+            foreach($update_data as $name=>$value){
+                if (isset($attributes[$name])) {
+                    $update->$name=$value;
+                }else{
+                    $update->onUnsafeAttribute($name, $value);
+                }
+            }
+            if ($update->save(false)) {
+                return Helper::reset([], 0, 0);
+            }
+            return Helper::reset([],0,1,$update->errors);
+        }
+        return Helper::reset([],0,1,CheckData::getValidateError($model->errors));
     }
 
     /**
@@ -88,9 +120,18 @@ class AdminRoleInfoController extends DefaultController
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        $id=explode(',',$id);
+        foreach($id as $k=>$v){
+            $check_data=CheckData::checkId($v);
+            if($check_data){
+                return Helper::reset([],0,1,$check_data);
+            }
+        }
+        $model = new AdminRoleInfo();
+        if($model->deleteAll(['id'=>$id])){
+            return Helper::reset([],0,0);
+        }
+        return Helper::reset([],0,1,$model->errors);
     }
 
     /**

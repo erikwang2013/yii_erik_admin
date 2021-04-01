@@ -127,51 +127,46 @@ class AdminController extends DefaultController
      * @return void
      */
     public function actionUpdate($id){
-        $params=Yii::$app->request->post();
-        if(count($params)==0){
+        $post=Yii::$app->request->post();
+        if(count($post)==0){
             return Helper::reset([],0,1,Yii::t('app','Update at least one data'));
         }
-        $post=[
-            'name'=>Yii::$app->request->post('name',''),
-            'sex'=>Yii::$app->request->post('sex'),
-            'status'=>Yii::$app->request->post('status'),
-            'phone'=>Yii::$app->request->post('phone'),
-            'real_name'=>Yii::$app->request->post('real_name',''),
-            'email'=>Yii::$app->request->post('email',''),
-            'img'=>Yii::$app->request->post('img',''),
-        ];
        $admin=new Admin(['scenario' => 'update']);
         $transaction = Admin::getDb()->beginTransaction();
-        $admin->attributes=[
-                'id'=>$id,
-                'name'=> $post['name'],
-                'status'=>$post['status']
-            ];
+        $update_data=$post;
+        $post['id']=$id;
+        $admin->attributes=$post;
         if ($admin->validate()) {
             $model=$this->findModel($id);
-            if(isset($post['name'])) $model->name=$post['name'];
-            if(isset($post['status'])) $model->status=$post['status'];
+            $attributes = array_flip($model->safeAttributes() ? $model->safeAttributes() : $model->attributes());
+            foreach($update_data as $name=>$value){
+                if (isset($attributes[$name])) {
+                    $model->$name=$value;
+                }else{
+                    $model->onUnsafeAttribute($name, $value);
+                }
+            }
             if ($model->save(false)) {
-                unset($params['name']); unset($params['name']);
-                if(count($params)==0){
+                //更新用户详情
+                unset($post['name']);unset($post['status']);
+                if(count($post)==0){
                     $transaction->commit();
                     return Helper::reset([], 0, 0);
                 }
                $admin_info=new AdminInfo(['scenario' => 'update']);
-               $admin_info->attributes=[
-                   'sex'=>$post['sex'],
-                   'phone'=>$post['phone'],
-                   'real_name'=>$post['real_name'],
-                   'email'=>$post['email'],
-                   'img'=>$post['img']
-               ];
+               $admin_info->attributes=$post;
                 if($admin_info->validate()){
                     $info=$this->findInfoModel($id);
-                    if(isset($post['sex'])) $info->sex=$post['sex'];
-                    if(isset($post['phone'])) $info->phone=$post['phone'];
-                    if(isset($post['real_name'])) $info->real_name=$post['real_name'];
-                    if(isset($post['email'])) $info->email=$post['email'];
-                    if(isset($post['img'])) $info->img=$post['img'];
+                    unset($attributes);
+                    $attributes = array_flip($info->safeAttributes() ? $info->safeAttributes() : $info->attributes());
+                    unset($update_data['name']);unset($update_data['status']);
+                    foreach($update_data as $info_name=>$info_value){
+                        if (isset($attributes[$info_name])) {
+                            $info->$info_name=$info_value;
+                        }else{
+                            $info->onUnsafeAttribute($info_name, $info_value);
+                        }
+                    }
                     if($info->save(false)){
                         $transaction->commit();
                        return Helper::reset([], 0, 0);
