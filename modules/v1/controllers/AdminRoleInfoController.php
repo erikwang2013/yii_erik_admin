@@ -100,7 +100,7 @@ class AdminRoleInfoController extends DefaultController
                 if (isset($attributes[$name])) {
                     $update->$name=$value;
                 }else{
-                    $update->onUnsafeAttribute($name, $value);
+                    return Helper::reset([$name=>$value],0,1,Yii::t('app','Illegal request!'));
                 }
             }
             if ($update->save(false)) {

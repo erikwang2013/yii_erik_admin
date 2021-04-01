@@ -143,7 +143,7 @@ class AdminController extends DefaultController
                 if (isset($attributes[$name])) {
                     $model->$name=$value;
                 }else{
-                    $model->onUnsafeAttribute($name, $value);
+                    return Helper::reset([$name=>$value],0,1,Yii::t('app','Illegal request!'));
                 }
             }
             if ($model->save(false)) {
@@ -164,7 +164,7 @@ class AdminController extends DefaultController
                         if (isset($attributes[$info_name])) {
                             $info->$info_name=$info_value;
                         }else{
-                            $info->onUnsafeAttribute($info_name, $info_value);
+                            return Helper::reset([$info_name=>$info_value],0,1,Yii::t('app','Illegal request!'));
                         }
                     }
                     if($info->save(false)){
