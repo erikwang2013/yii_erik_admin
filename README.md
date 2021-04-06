@@ -1,1 +1,2 @@
 # yii_erik_admin
+yii_erik_admin是一款基于yii2开源的用户管理系统，满足基本的用户管理需求
