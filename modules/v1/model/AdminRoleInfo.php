@@ -83,11 +83,11 @@ class AdminRoleInfo extends \yii\db\ActiveRecord
             $dataProvider[$k]=[
                 'id'=>$v->id,
                 'name'=>$v->name,
-                'create_time'=>$v->create_time,
                 'status'=>[
                     'key'=>$v->status,
                     'value'=>$v->status?Yii::t('app','Off'):Yii::t('app','On')
-                ]
+                ],
+                'create_time'=>$v->create_time
             ];
         }
         return [

@@ -68,4 +68,5 @@ return [
     'Request ID cannot be empty'=>'请求id不能为空',
     'Hide'=>'隐藏',
     'Display'=>'显示',
+    'Permission ID'=>'权限id',
 ];

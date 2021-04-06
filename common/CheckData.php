@@ -60,10 +60,10 @@ class CheckData
      * @param [type] $id
      * @return void
      */
-    public static function checkId($id){
+    public static function checkId($id,$msg=''){
         $validator=new DynamicModel(compact('id'));
         $attribute=[
-            'id'=>Yii::t('app','Admin Id')
+            'id'=>empty($msg)?Yii::t('app','Admin Id'):$msg
         ];
         $validator->setAttributeLabels($attribute)
         ->addRule(['id'],'integer')
