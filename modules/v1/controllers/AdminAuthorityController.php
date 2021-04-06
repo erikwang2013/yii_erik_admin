@@ -25,28 +25,23 @@ class AdminAuthorityController extends DefaultController
     public function actionIndex()
     {
         $params_config=Yii::$app->params;
-        $params=[
-            'id'=>Yii::$app->request->get('id'),
-            'name'=>Yii::$app->request->get('name',''),
-            'parent_id'=>Yii::$app->request->get('parent_id'),
-            'show'=>Yii::$app->request->get('show'),
-            'status'=>Yii::$app->request->get('status'),
-            'code'=>Yii::$app->request->get('code',''),
-            'page'=>Yii::$app->request->get('page',$params_config['page']),
-            'limit'=>Yii::$app->request->get('limit',$params_config['limit'])
-        ];
+        $params['page']=Yii::$app->request->get('page',$params_config['page']);
+        $params['limit']=Yii::$app->request->get('limit',$params_config['limit']);
         $error_page=CheckData::checkPage($params['page'],$params['limit']);
         if($error_page){
             return Helper::reset([],0,1,$error_page);
         }
         $model = new AdminAuthority(['scenario' => 'search']);
-        $model->attributes=[
-            'id'=>$params['id'],
-            'name'=>$params['name'],
-            'parent_id'=>$params['parent_id'],
-            'show'=>$params['show'],
-            'status'=>$params['status'],
-        ];
+        $attributes = array_flip($model->safeAttributes() ? $model->safeAttributes() : $model->attributes());
+        $data=[];
+        foreach($params as $name=>$value){
+            if (isset($attributes[$name])) {
+                $data[$name]=$value;
+            }else{
+                return Helper::reset([$name=>$value],0,1,Yii::t('app','Illegal request!'));
+            }
+        }
+        $model->attributes=$data;
         $result=[];
         if ($model->validate()) {
             $dataProvider = $model->search($params);
@@ -68,14 +63,16 @@ class AdminAuthorityController extends DefaultController
         $post['parent_id']=Yii::$app->request->post('parent_id',0);
         $model = new AdminAuthority(['scenario' => 'create']);
         $post['id']=Helper::getCreateId();
-        $model->attributes=[
-            'id'=>$post['id'],
-            'parent_id'=>$post['parent_id'],
-            'code'=>$post['code'],
-            'name'=>$post['name'],
-            'show'=>$post['show'],
-            'status'=>$post['status'],
-        ];
+        $attributes = array_flip($model->safeAttributes() ? $model->safeAttributes() : $model->attributes());
+        $data=[];
+        foreach($post as $name=>$value){
+            if (isset($attributes[$name])) {
+                $data[$name]=$value;
+            }else{
+                return Helper::reset([$name=>$value],0,1,Yii::t('app','Illegal request!'));
+            }
+        }
+        $model->attributes=$data;
         if ($model->validate()) {
             if ($model->save(false)) {
                 return Helper::reset([], 0, 0);

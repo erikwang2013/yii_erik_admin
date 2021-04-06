@@ -25,38 +25,40 @@ class AdminController extends DefaultController
     public function actionIndex()
     {
         $params_config=Yii::$app->params;
-        $params=[
-            'id'=>Yii::$app->request->get('id'),
-            'name'=>Yii::$app->request->get('name',''),
-            'real_name'=>Yii::$app->request->get('real_name',''),
-            'phone'=>Yii::$app->request->get('phone',''),
-            'email'=>Yii::$app->request->get('email',''),
-            'sex'=>Yii::$app->request->get('sex'),
-            'page'=>Yii::$app->request->get('page',$params_config['page']),
-            'limit'=>Yii::$app->request->get('limit',$params_config['limit'])
-        ];
+        $params['page']=Yii::$app->request->get('page',$params_config['page']);
+        $params['limit']=Yii::$app->request->get('limit',$params_config['limit']);
         $error_page=CheckData::checkPage($params['page'], $params['limit']);
         if ($error_page) {
             return Helper::reset([], 0, 1, $error_page);
         }
         $model = new Admin(['scenario' => 'search']);
-        $model->attributes=[
-            'name'=>$params['name'],
-            'id'=>$params['id']
-        ];
+        $attributes = array_flip($model->safeAttributes() ? $model->safeAttributes() : $model->attributes());
+        $data=[];
+        foreach($params as $name=>$value){
+            if (isset($attributes[$name])) {
+                $data[$name]=$value;
+            }else{
+                return Helper::reset([$name=>$value],0,1,Yii::t('app','Illegal request!'));
+            }
+        }
+        $model->attributes=$data;
         if ($model->validate()) {
             $model_info=new AdminInfo(['scenario' => 'search']);
-            $model_info->attributes=[
-                'real_name'=>$params['real_name'],
-                'email'=>$params['email'],
-                'phone'=>$params['phone'],
-                'sex'=>$params['sex']
-            ];
-            if( $model_info->validate()){
-                $dataProvider = $model->search($params);
-                $result=[];
-                $result=ArrayHelper::toArray($dataProvider);
-                return Helper::reset($result['list'], $result['count'], 0);
+            $attributes_info = array_flip($model_info->safeAttributes() ? $model_info->safeAttributes() : $model_info->attributes());
+            $data_info=[];
+            foreach($params as $name=>$value){
+                if (isset($attributes_info[$name])) {
+                    $data_info[$name]=$value;
+                }
+            }
+            if (count($data_info)>0) {
+                $model_info->attributes=$data_info;
+                if ($model_info->validate()) {
+                    $dataProvider = $model->search($params);
+                    $result=[];
+                    $result=ArrayHelper::toArray($dataProvider);
+                    return Helper::reset($result['list'], $result['count'], 0);
+                }
             }
             return Helper::reset([],0,1,CheckData::getValidateError($model_info->errors));
         }
@@ -89,35 +91,48 @@ class AdminController extends DefaultController
         $transaction = $db->beginTransaction();
         $post['id']=Helper::getCreateId();
         $model->setPassword($post['password']);
-        $model->attributes=[
-            'id'=>$post['id'],
-            'name'=>$post['name'],
-            'password'=>$post['password'],
-            'password_repeat'=>$post['password_repeat'],
-        ];
+        $attributes = array_flip($model->safeAttributes() ? $model->safeAttributes() : $model->attributes());
+        $data=[];
+        foreach($post as $name=>$value){
+            if (isset($attributes[$name])) {
+                $data[$name]=$value;
+            }
+        }
+        $model->attributes=$data;
         if ($model->validate()) {
             if ($model->save(false)) {
                 $info=new AdminInfo(['scenario' => 'create']);
-                unset($post['name']);unset($post['password']);unset($post['password_repeat']);
-                $info->attributes=$post;
-                if($info->validate()){
-                    if($info->save(false)){
-                        if (isset($role_id)) {
-                            $insert=[];
-                            foreach ($role_ids as $m=>$n) {
-                                $insert[]=[
-                                    'admin_id'=>$post['id'],
-                                    'role_id'=>$n
-                                ];
-                            }
-                            $table=AdminRole::tableName();
-                            Yii::$app->db->createCommand()->batchInsert($table, ['admin_id', 'role_id'], $insert)->execute();
-                        }
-                        $transaction->commit();
-                        return Helper::reset([], 0, 0);
+                unset($post['name']);
+                unset($post['password']);
+                unset($post['password_repeat']);
+                $attributes_info = array_flip($info->safeAttributes() ? $info->safeAttributes() : $info->attributes());
+                $data_info=[];
+                foreach ($post as $name=>$value) {
+                    if (isset($attributes_info[$name])) {
+                        $data_info[$name]=$value;
                     }
-                    $transaction->rollBack();
-                    return Helper::reset([],0,1,$info->errors);
+                }
+                if (count($data_info)>0) {
+                    $info->attributes=$data_info;
+                    if ($info->validate()) {
+                        if ($info->save(false)) {
+                            if (isset($role_id)) {
+                                $insert=[];
+                                foreach ($role_ids as $m=>$n) {
+                                    $insert[]=[
+                                        'admin_id'=>$post['id'],
+                                        'role_id'=>$n
+                                    ];
+                                }
+                                $table=AdminRole::tableName();
+                                Yii::$app->db->createCommand()->batchInsert($table, ['admin_id', 'role_id'], $insert)->execute();
+                            }
+                            $transaction->commit();
+                            return Helper::reset([], 0, 0);
+                        }
+                        $transaction->rollBack();
+                        return Helper::reset([], 0, 1, $info->errors);
+                    }
                 }
                 $transaction->rollBack();
                 return Helper::reset([],0,1,CheckData::getValidateError($info->errors));    

@@ -27,23 +27,23 @@ class AdminRoleInfoController extends DefaultController
     {
         
         $params_config=Yii::$app->params;
-        $params=[
-            'id'=>Yii::$app->request->get('id',''),
-            'name'=>Yii::$app->request->get('name',''),
-            'status'=>Yii::$app->request->get('status',''),
-            'page'=>Yii::$app->request->get('page',$params_config['page']),
-            'limit'=>Yii::$app->request->get('limit',$params_config['limit'])
-        ];
+        $params['page']=Yii::$app->request->get('page',$params_config['page']);
+        $params['limit']=Yii::$app->request->get('limit',$params_config['limit']);
         $error_page=CheckData::checkPage($params['page'],$params['limit']);
         if($error_page){
             return Helper::reset([],0,1,$error_page);
         }
         $model = new AdminRoleInfo(['scenario' => 'search']);
-        $model->attributes=[
-            'id'=>$params['id'],
-            'name'=>$params['name'],
-            'status'=>$params['status'],
-        ];
+        $attributes = array_flip($model->safeAttributes() ? $model->safeAttributes() : $model->attributes());
+        $data=[];
+        foreach($params as $name=>$value){
+            if (isset($attributes[$name])) {
+                $data[$name]=$value;
+            }else{
+                return Helper::reset([$name=>$value],0,1,Yii::t('app','Illegal request!'));
+            }
+        }
+        $model->attributes=$data;
         if ($model->validate()) {
             $dataProvider = $model->search($params);
             $result=ArrayHelper::toArray($dataProvider);
@@ -60,9 +60,9 @@ class AdminRoleInfoController extends DefaultController
     public function actionCreate()
     {
         $post=Yii::$app->request->post();
-        $authority_ids=Yii::$app->request->post('authority_ids');
+        $authority_id=Yii::$app->request->post('authority_ids');
         if (isset($authority_id)) {
-            $authority_ids=explode(',', $authority_ids);
+            $authority_ids=explode(',', $authority_id);
             foreach ($authority_ids as $k=>$v) {
                 $check_data=CheckData::checkId($v, Yii::t('app', 'Permission ID'));
                 if ($check_data) {
@@ -75,12 +75,16 @@ class AdminRoleInfoController extends DefaultController
         $db = Yii::$app->db;
         $transaction = $db->beginTransaction();
         $post['id']=Helper::getCreateId();
-        $model->attributes=[
-            'id'=>$post['id'],
-            'name'=>$post['name'],
-            'status'=>$post['status'],
-            'create_time'=>date('Y-m-d H:i:s')
-        ];
+        $attributes = array_flip($model->safeAttributes() ? $model->safeAttributes() : $model->attributes());
+        $data=[];
+        foreach($post as $name=>$value){
+            if (isset($attributes[$name])) {
+                $data[$name]=$value;
+            }else{
+                return Helper::reset([$name=>$value],0,1,Yii::t('app','Illegal request!'));
+            }
+        }
+        $model->attributes=$data;
         if ($model->validate()) {
             if ($model->save(false)) {
                 if (isset($authority_id)) {
