@@ -44,36 +44,39 @@ class PublicController extends DefaultController
         Helper::deleteCache($code);
         $model = Admin::find()->where('name=:name',[':name'=>$user_name])->joinWith("adminInfo")->one();
         $adminInfo=$model->adminInfo;
-        if($model){
-            if (Yii::$app->getSecurity()->validatePassword($password, $model->hash)) {
-                if($model->status==1){
-                    return Helper::reset([],0,1,Yii::t('app','Users are not allowed to log in, please contact the administrator'));
-                }
-                $admin=new Admin;
-                $token=base64_encode($admin->setToken().time());
-                $result=Admin::updateAll(['access_token'=>$token],['id'=>$model->id]);
-               if ($result) {
-                    $data=[
-                        'id'=>$model->id,
-                        'sex'=>[
-                            'key'=>$adminInfo->sex,
-                            'value'=>$adminInfo->sex?Yii::t('app','Man'):Yii::t('app','Woman')
-                        ],
-                        'user_name'=>$model->name,
-                        'real_name'=>$adminInfo->real_name,
-                        'phone'=>$adminInfo->phone,
-                        'email'=>$adminInfo->email,
-                        'img'=>$adminInfo->img,
-                        'token'=>$token
-                    ];
-                    $this->login_admin_id=$model->id;
-                    return Helper::reset($data,0,0);
-               }
-            }else{
-                return Helper::reset([],0,1,Yii::t('app','Wrong user name or password.'));
-            }
+        if(!$model){
+            return Helper::reset([],0,1,Yii::t('app','Wrong user name or password.'));
         }
-        return Helper::reset([],0,1,CheckData::getValidateError($model->errors));
+        
+        if (!Yii::$app->getSecurity()->validatePassword($password, $model->hash)) {
+            return Helper::reset([],0,1,Yii::t('app','Wrong user name or password.'));
+        }
+        if($model->status==1){
+            return Helper::reset([],0,1,Yii::t('app','Users are not allowed to log in, please contact the administrator'));
+        }
+        $key=Yii::$app->getSecurity()->generateRandomString();
+        $token=base64_encode(md5($key.time()));
+        $result_model=Admin::findOne($model->id); 
+        $result_model->access_token=$token;
+        $result_model->save();
+       if (!$result_model) {
+            return Helper::reset([],0,1,Yii::t('app','Wrong user name or password.'));
+       }
+       $data=[
+            'id'=>$model->id,
+            'sex'=>[
+                'key'=>$adminInfo->sex,
+                'value'=>$adminInfo->sex?Yii::t('app','Man'):Yii::t('app','Woman')
+            ],
+            'user_name'=>$model->name,
+            'real_name'=>$adminInfo->real_name,
+            'phone'=>$adminInfo->phone,
+            'email'=>$adminInfo->email,
+            'img'=>$adminInfo->img,
+            'token'=>$token
+        ];
+        $this->login_admin_id=$model->id;
+        return Helper::reset($data,0,0);
     }
     /**
      * 登出
