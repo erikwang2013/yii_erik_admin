@@ -12,6 +12,7 @@ class DefaultController extends Controller
 {
     public $enableCsrfValidation = false;
     public $login_admin_id;
+    public $login_token;
 
     public function init()
     {

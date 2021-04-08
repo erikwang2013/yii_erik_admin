@@ -72,16 +72,15 @@ class AdminAuthority extends \yii\db\ActiveRecord
         $query = $this->findOne($id);
         return $query['name'];
     }
-    public function search($params=[]){
+
+    public function search($params=[],$page,$limit){
         $query = $this->find();
-        $pageSize=$params['limit'];
-        $page=$params['page'];
-        $query->andFilterWhere(['id' =>$params['id']])
-            ->andFilterWhere(['parent_id' =>$params['parent_id']])
-            ->andFilterWhere(['show' =>$params['show']])
-            ->andFilterWhere(['status' =>$params['status']])
-            ->andFilterWhere( ['like', 'name',$params['name']])
-            ->andFilterWhere(['like', 'code',$params['code']]);
+        $query->andFilterWhere(['id' =>isset($params['id'])?$params['id']:''])
+            ->andFilterWhere(['parent_id' =>isset($params['parent_id'])?$params['parent_id']:''])
+            ->andFilterWhere(['show' =>isset($params['show'])?$params['show']:''])
+            ->andFilterWhere(['status' =>isset($params['status'])?$params['status']:''])
+            ->andFilterWhere( ['like', 'name',isset($params['name'])?$params['name']:''])
+            ->andFilterWhere(['like', 'code',isset($params['code'])?$params['code']:'']);
         $count=$query->count();
         if($count==0){
             return [
@@ -90,7 +89,7 @@ class AdminAuthority extends \yii\db\ActiveRecord
             ];
         }
         $page=$page-1>=0?$page-1:0;
-        $pages = new Pagination(['totalCount' => $count,'pageSize' => $pageSize,'page'=>$page]);
+        $pages = new Pagination(['totalCount' => $count,'pageSize' => $limit,'page'=>$page]);
         $dataProvider=$query->offset($pages->offset)->limit($pages->limit)->all();
         foreach($dataProvider as $k=>$v){
             $dataProvider[$k]=[
@@ -105,7 +104,7 @@ class AdminAuthority extends \yii\db\ActiveRecord
                     'key'=>$v->show,
                     'value'=>$v->show?Yii::t('app','Hide'):Yii::t('app','Display')
                 ],
-                'parent_id'=>[
+                'parent'=>[
                     'key'=>$v->parent_id,
                     'value'=>$v->parent_id>0?$this->getName($v->parent_id):'—',
                 ]

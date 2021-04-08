@@ -25,9 +25,10 @@ class AdminAuthorityController extends DefaultController
     public function actionIndex()
     {
         $params_config=Yii::$app->params;
-        $params['page']=Yii::$app->request->get('page',$params_config['page']);
-        $params['limit']=Yii::$app->request->get('limit',$params_config['limit']);
-        $error_page=CheckData::checkPage($params['page'],$params['limit']);
+        $params=Yii::$app->request->get();
+        $page=Yii::$app->request->get('page',$params_config['page']);
+        $limit=Yii::$app->request->get('limit',$params_config['limit']);
+        $error_page=CheckData::checkPage($page,$limit);
         if($error_page){
             return Helper::reset([],0,1,$error_page);
         }
@@ -36,7 +37,7 @@ class AdminAuthorityController extends DefaultController
         $model->attributes=$data;
         $result=[];
         if ($model->validate()) {
-            $dataProvider = $model->search($data);
+            $dataProvider = $model->search($data,$page,$limit);
             $result=ArrayHelper::toArray($dataProvider);
             return Helper::reset($result['list'],$result['count'],0);
         }

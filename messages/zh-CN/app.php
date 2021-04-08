@@ -70,4 +70,6 @@ return [
     'Hide'=>'隐藏',
     'Display'=>'显示',
     'Permission ID'=>'权限id',
+    'The user is not assigned permission, please contact the administrator'=>'用户未分配权限，请联系管理员',
+    "The user's role does not have permission"=>'用户所属角色不存无权限',
 ];

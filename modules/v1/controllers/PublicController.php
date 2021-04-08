@@ -6,7 +6,9 @@ use Yii,
     app\common\CheckData,
     app\common\Helper,
     app\modules\v1\model\Admin,
-    app\modules\v1\validate\AdminValidate;
+    app\modules\v1\validate\AdminValidate,
+    app\modules\v1\model\AdminRoleAuthority,
+    app\modules\v1\model\AdminAuthority;
 
 /**
  * 公用接口
@@ -37,44 +39,110 @@ class PublicController extends DefaultController
         if($error_login){
             return Helper::reset([],0,1,$error_login);
         }
+
+        //检验验证码
         $code_cache=Helper::getCache($code);
         if(strcmp($code_number,$code_cache)!=0){
             return Helper::reset([],0,1,Yii::t('app','Verification code error'));
         }
         Helper::deleteCache($code);
-        $model = Admin::find()->where('name=:name',[':name'=>$user_name])->joinWith("adminInfo")->one();
-        $adminInfo=$model->adminInfo;
+
+        //查询用户
+        $model=new Admin();
+        $table=$model->tableName();
+        $model = $model::find()->where($table.'.name=:name',[':name'=>$user_name])->joinWith("adminInfo")->joinWith(["adminRole"])->one();
+        $admin_info=$model->adminInfo;
+        $admin_role=$model->adminRole;
         if(!$model){
             return Helper::reset([],0,1,Yii::t('app','Wrong user name or password.'));
         }
-        
+        //校验密码
         if (!Yii::$app->getSecurity()->validatePassword($password, $model->hash)) {
             return Helper::reset([],0,1,Yii::t('app','Wrong user name or password.'));
         }
+        //校验状态
         if($model->status==1){
             return Helper::reset([],0,1,Yii::t('app','Users are not allowed to log in, please contact the administrator'));
         }
-        
+
+        //获取管理员角色id
+        if(!isset($admin_role)){
+            return Helper::reset([],0,1,Yii::t('app','The user is not assigned permission, please contact the administrator'));
+        }
+        $role_ids=[];
+        foreach($admin_role as $m=>$n){
+            $role_ids[]=$n->id;
+        }
+        unset($admin_role);unset($m);unset($n);
+        $role_ids=array_unique($role_ids);
+
+        //查询角色权限关系
+        $role_authority=new AdminRoleAuthority();
+        $authority_data=$role_authority::find()->where(['in','role_id',$role_ids])->all();
+        if(!$authority_data){
+            return Helper::reset([],0,1,Yii::t('app',"The user's role does not have permission"));
+        }
+
+        $authority_ids=[];
+        foreach($authority_data as $key=>$value){
+            $authority_ids[]=$value->authority_id;
+        }
+        unset($authority_data);unset($key);unset($value);
+        $authority_ids=array_unique($authority_ids);
+
+        //查询权限
+        $authority=new AdminAuthority();
+        $authority_list=$authority::find()->where(['in','id',$authority_ids])->all();
+        if(!$authority_list){
+            return Helper::reset([],0,1,Yii::t('app',"The user's role does not have permission"));
+        }
+
+        foreach($authority_list as $k=>$v){
+            $authority_list[$k]=[
+                'id'=>$v->id,
+                'name'=>$v->name,
+                'code'=>$v->code,
+                'status'=>[
+                    'key'=>$v->status,
+                    'value'=>$v->status?Yii::t('app','Off'):Yii::t('app','On')
+                ],
+                'show'=>[
+                    'key'=>$v->show,
+                    'value'=>$v->show?Yii::t('app','Hide'):Yii::t('app','Display')
+                ],
+                'parent'=>[
+                    'key'=>$v->parent_id,
+                    'value'=>$v->parent_id>0?$authority->getName($v->parent_id):'—',
+                ]
+            ];
+        }
+
+        //更新token
         $result_model=Admin::findOne($model->id); 
         $token=base64_encode(md5($result_model->setToken().time()));
         $result_model->access_token=$token;
-        $result_model->save();
+        $result_model->save(false);
        if (!$result_model) {
             return Helper::reset([],0,1,Yii::t('app','Wrong user name or password.'));
        }
+       
+       //组合登录用户数据
        $data=[
             'id'=>$model->id,
             'sex'=>[
-                'key'=>$adminInfo->sex,
-                'value'=>$adminInfo->sex?Yii::t('app','Man'):Yii::t('app','Woman')
+                'key'=>$admin_info->sex,
+                'value'=>$admin_info->sex?Yii::t('app','Man'):Yii::t('app','Woman')
             ],
             'user_name'=>$model->name,
-            'real_name'=>$adminInfo->real_name,
-            'phone'=>$adminInfo->phone,
-            'email'=>$adminInfo->email,
-            'img'=>$adminInfo->img,
-            'token'=>$token
+            'real_name'=>$admin_info->real_name,
+            'phone'=>$admin_info->phone,
+            'email'=>$admin_info->email,
+            'img'=>$admin_info->img,
+            'token'=>$token,
+            'authority'=>$authority_list
         ];
+        //用户信息存储
+        Helper::setCache($token, json_encode($data,true));
         $this->login_admin_id=$model->id;
         return Helper::reset($data,0,0);
     }
@@ -98,6 +166,7 @@ class PublicController extends DefaultController
         if($model->save(false)){
             return Helper::reset([],0,0);
         }
+        Helper::deleteCache($this->login_token);
         return Helper::reset([],0,1,CheckData::getValidateError($model->errors));
     }
     /**
