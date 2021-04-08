@@ -85,11 +85,11 @@ class AdminRoleInfo extends \yii\db\ActiveRecord
         $pages = new Pagination(['totalCount' => $count,'pageSize' => $limit,'page'=>$page]);
         $dataProvider=$query->offset($pages->offset)->limit($pages->limit)->all();
         foreach($dataProvider as $k=>$v){
-            $roleAuthority=$v->roleAuthority;
+            $role_authority=$v->roleAuthority;
             $authority=[];
-            if(isset($roleAuthority)){
+            if(isset($role_authority)){
                 
-                foreach($roleAuthority as $m=>$n){
+                foreach($role_authority as $m=>$n){
                     $authority[]=[
                         'id'=>$n->id,
                         'name'=>$n->name

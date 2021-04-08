@@ -127,11 +127,11 @@ class Admin extends \yii\db\ActiveRecord
         $pages = new Pagination(['totalCount' => $count,'pageSize' => $limit,'page'=>$page]);
         $dataProvider=$query->offset($pages->offset)->limit($pages->limit)->all();
         foreach($dataProvider as $k=>$v){
-            $adminInfo=$v->adminInfo;
-            $adminRole=$v->adminRole;
+            $admin_info=$v->adminInfo;
+            $admin_role=$v->adminRole;
             $role=[];
-            if(isset($adminRole)){
-                foreach($adminRole as $m=>$n){
+            if(isset($admin_role)){
+                foreach($admin_role as $m=>$n){
                     $role[]=[
                         'id'=>$n->id,
                         'name'=>$n->name
@@ -142,20 +142,20 @@ class Admin extends \yii\db\ActiveRecord
                 'id'=>$v->id,
                 'name'=>$v->name,
                 'role'=>$role,
-                'real_name'=>$adminInfo->real_name,
+                'real_name'=>$admin_info->real_name,
                 'status'=>[
                     'key'=>$v->status,
                     'value'=>$v->status?Yii::t('app','Off'):Yii::t('app','On')
                 ],
                 'sex'=>[
-                    'key'=>$adminInfo->sex,
-                    'value'=>$adminInfo->sex?Yii::t('app','Man'):Yii::t('app','Woman')
+                    'key'=>$admin_info->sex,
+                    'value'=>$admin_info->sex?Yii::t('app','Man'):Yii::t('app','Woman')
                 ],
-                'phone'=>$adminInfo->phone,
-                'email'=>$adminInfo->email,
-                'img'=>$adminInfo->img,
-                'create_time'=>$adminInfo->create_time,
-                'update_time'=>$adminInfo->update_time
+                'phone'=>$admin_info->phone,
+                'email'=>$admin_info->email,
+                'img'=>$admin_info->img,
+                'create_time'=>$admin_info->create_time,
+                'update_time'=>$admin_info->update_time
             ];
            unset($v->adminInfo);
         }
