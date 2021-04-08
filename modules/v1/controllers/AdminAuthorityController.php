@@ -63,23 +63,16 @@ class AdminAuthorityController extends DefaultController
         $post['parent_id']=Yii::$app->request->post('parent_id',0);
         $model = new AdminAuthority(['scenario' => 'create']);
         $post['id']=Helper::getCreateId();
-        $attributes = array_flip($model->safeAttributes() ? $model->safeAttributes() : $model->attributes());
-        $data=[];
-        foreach($post as $name=>$value){
-            if (isset($attributes[$name])) {
-                $data[$name]=$value;
-            }else{
-                return Helper::reset([$name=>$value],0,1,Yii::t('app','Illegal request!'));
-            }
-        }
+        $data=Helper::filterKey($model,$post,0);
         $model->attributes=$data;
-        if ($model->validate()) {
-            if ($model->save(false)) {
-                return Helper::reset([], 0, 0);
-            }
-            return Helper::reset([],0,1,$model->errors);
+        if (!$model->validate()) {
+            return Helper::reset([],0,1,CheckData::getValidateError($model->errors));
         }
-        return Helper::reset([],0,1,CheckData::getValidateError($model->errors));
+        
+        if ($model->save(false)) {
+            return Helper::reset([], 0, 0);
+        }
+        return Helper::reset([],0,1,$model->errors);
     }
 
     /**
@@ -99,22 +92,15 @@ class AdminAuthorityController extends DefaultController
         $update_data=$post;
         $post['id']=$id;
         $model->attributes=$post;
-        if ($model->validate()) {
-            $update = $this->findModel($id);
-            $attributes = array_flip($update->safeAttributes() ? $update->safeAttributes() : $update->attributes());
-            foreach($update_data as $name=>$value){
-                if (isset($attributes[$name])) {
-                    $update->$name=$value;
-                }else{
-                    return Helper::reset([$name=>$value],0,1,Yii::t('app','Illegal request!'));
-                }
-            }
-            if ($update->save(false)) {
-                return Helper::reset([], 0, 0);
-            }
-            return Helper::reset([],0,1,$update->errors);
+        if (!$model->validate()) {
+            return Helper::reset([],0,1,CheckData::getValidateError($model->errors));  
         }
-        return Helper::reset([],0,1,CheckData::getValidateError($model->errors));
+        $update = $this->findModel($id);
+        Helper::filterKey($update,$update_data);
+        if ($update->save(false)) {
+            return Helper::reset([], 0, 0);
+        }
+        return Helper::reset([],0,1,$update->errors);
     }
 
     /**

@@ -86,62 +86,52 @@ class AdminController extends DefaultController
             unset($post['role_ids']);
         }
         
+        //新增账号
         $model = new Admin(['scenario' => 'create']);
         $db = Yii::$app->db;
         $transaction = $db->beginTransaction();
         $post['id']=Helper::getCreateId();
         $model->setPassword($post['password']);
-        $attributes = array_flip($model->safeAttributes() ? $model->safeAttributes() : $model->attributes());
-        $data=[];
-        foreach($post as $name=>$value){
-            if (isset($attributes[$name])) {
-                $data[$name]=$value;
-            }
-        }
+        $data=Helper::filterKey($model,$post,0);
         $model->attributes=$data;
-        if ($model->validate()) {
-            if ($model->save(false)) {
-                $info=new AdminInfo(['scenario' => 'create']);
-                unset($post['name']);
-                unset($post['password']);
-                unset($post['password_repeat']);
-                $attributes_info = array_flip($info->safeAttributes() ? $info->safeAttributes() : $info->attributes());
-                $data_info=[];
-                foreach ($post as $name=>$value) {
-                    if (isset($attributes_info[$name])) {
-                        $data_info[$name]=$value;
-                    }
-                }
-                if (count($data_info)>0) {
-                    $info->attributes=$data_info;
-                    if ($info->validate()) {
-                        if ($info->save(false)) {
-                            if (isset($role_id)) {
-                                $insert=[];
-                                foreach ($role_ids as $m=>$n) {
-                                    $insert[]=[
-                                        'admin_id'=>$post['id'],
-                                        'role_id'=>$n
-                                    ];
-                                }
-                                $table=AdminRole::tableName();
-                                Yii::$app->db->createCommand()->batchInsert($table, ['admin_id', 'role_id'], $insert)->execute();
-                            }
-                            $transaction->commit();
-                            return Helper::reset([], 0, 0);
-                        }
-                        $transaction->rollBack();
-                        return Helper::reset([], 0, 1, $info->errors);
-                    }
-                }
-                $transaction->rollBack();
-                return Helper::reset([],0,1,CheckData::getValidateError($info->errors));    
-            }
+        if (!$model->validate()) {
             $transaction->rollBack();
-            return Helper::reset([],0,1,$model->errors);
+            return Helper::reset([],0,1,CheckData::getValidateError($model->errors));
         }
-        $transaction->rollBack();
-        return Helper::reset([],0,1,CheckData::getValidateError($model->errors));
+        if (!$model->save(false)) {
+            $transaction->rollBack();
+            return Helper::reset([],0,1,$model->errors);  
+        }
+
+        //新增详情
+        $info=new AdminInfo(['scenario' => 'create']);
+        $data_info=Helper::filterKey($info,$post,0);
+        if (count($data_info)>0) {
+            $info->attributes=$data_info;
+            if (!$info->validate()) {
+                $transaction->rollBack();
+                return Helper::reset([],0,1,CheckData::getValidateError($info->errors));  
+            }
+            if (!$info->save(false)) {
+                $transaction->rollBack();
+                return Helper::reset([], 0, 1, $info->errors);
+            }
+        }
+        
+        //新增用户角色
+        if (isset($role_id)) {
+            $insert=[];
+            foreach ($role_ids as $m=>$n) {
+                $insert[]=[
+                    'admin_id'=>$post['id'],
+                    'role_id'=>$n
+                ];
+            }
+            $table=AdminRole::tableName();
+            Yii::$app->db->createCommand()->batchInsert($table, ['admin_id', 'role_id'], $insert)->execute();
+        }
+        $transaction->commit();
+        return Helper::reset([], 0, 0);
     }
 
     /**
@@ -170,77 +160,69 @@ class AdminController extends DefaultController
         if(count($post)==0){
             return Helper::reset([],0,1,Yii::t('app','Update at least one data'));
         }
-        $post['id']=$id;
+       $post['id']=$id;
        $admin=new Admin(['scenario' => 'update']);
+       //过滤存在的字段
+       $data=Helper::filterKey($admin,$post,0);
        $db = Yii::$app->db;
        $transaction = $db->beginTransaction();
-        $update_data=$post;
-        $admin->attributes=$post;
-        if ($admin->validate()) {
-            $model=$this->findModel($post['id']);
-            $attributes = array_flip($model->safeAttributes() ? $model->safeAttributes() : $model->attributes());
-            foreach($update_data as $name=>$value){
-                if (isset($attributes[$name])) {
-                    $model->$name=$value;
-                }else{
-                    return Helper::reset([$name=>$value],0,1,Yii::t('app','Illegal request!'));
-                }
-            }
-            //保存用户基本信息
-            if ($model->save(false)) {
-                        //更新用户详情
-                unset($post['name']);unset($post['status']);
-                if(count($post)==0){
-                    $transaction->commit();
-                    return Helper::reset([], 0, 0);
-                }
-                $admin_info=new AdminInfo(['scenario' => 'update']);
-                $admin_info->attributes=$post;
-                //校验用户详情
-                if($admin_info->validate()){
-                    $info=$this->findInfoModel($post['id']);
-                    unset($attributes);
-                    $attributes = array_flip($info->safeAttributes() ? $info->safeAttributes() : $info->attributes());
-                    unset($post['name']);unset($post['status']);
-                    foreach($post as $info_name=>$info_value){
-                        if (isset($attributes[$info_name])) {
-                            $info->$info_name=$info_value;
-                        }else{
-                            return Helper::reset([$info_name=>$info_value],0,1,Yii::t('app','Illegal request!'));
-                        }
-                    }
-                    //保存用户详情
-                    if($info->save(false)){
-                        //删除用户角色
-                        $admin_role=new AdminRole();
-                        if ($admin_role->deleteAll(['admin_id'=>$post['id']])) {
-                            if (isset($role_id)) {
-                                //新增用户角色
-                                $insert=[];
-                                foreach ($role_ids as $m=>$n) {
-                                    $insert[]=[
-                                            'admin_id'=>$post['id'],
-                                            'role_id'=>$n
-                                        ];
-                                }
-                                $table=AdminRole::tableName();
-                                Yii::$app->db->createCommand()->batchInsert($table, ['admin_id', 'role_id'], $insert)->execute();
-                            }
-                        }
-                        $transaction->commit();
-                        return Helper::reset([], 0, 0);
-                    }
-                    $transaction->rollBack();
-                    return Helper::reset([],0,1,$info->errors);
-                }
-                $transaction->rollBack();
-                return Helper::reset([],0,1,CheckData::getValidateError($admin_info->errors));
-            }
+        $admin->attributes=$data;
+        if (!$admin->validate()) {
+            $transaction->rollBack();
+            return Helper::reset([],0,1,CheckData::getValidateError($admin->errors));
+        }
+        $model=$this->findModel($post['id']);
+        //过滤符合的数据
+        Helper::filterKey($model,$post);
+        //保存用户基本信息
+        if (!$model->save(false)) {
             $transaction->rollBack();
             return Helper::reset([],0,1,$model->errors);
         }
-        $transaction->rollBack();
-        return Helper::reset([],0,1,CheckData::getValidateError($admin->errors));
+        
+
+        //开始更新用户详情
+        if(count($post)==0){
+            $transaction->commit();
+            return Helper::reset([], 0, 0);
+        }
+        $admin_info=new AdminInfo(['scenario' => 'update']);
+        //过滤存在的字段
+        $data_info=Helper::filterKey($admin_info,$post,0);
+        $admin_info->attributes=$data_info;
+        //校验用户详情
+        if(!$admin_info->validate()){
+            $transaction->rollBack();
+            return Helper::reset([],0,1,CheckData::getValidateError($admin_info->errors));
+        }
+        $info=$this->findInfoModel($post['id']);
+        unset($data_info['id']);
+        //过滤符合的数据
+        Helper::filterKey($info,$data_info);
+        //保存用户详情
+        if(!$info->save(false)){
+            $transaction->rollBack();
+            return Helper::reset([],0,1,$info->errors);
+        }
+        
+        //删除用户角色
+        $admin_role=new AdminRole();
+        if ($admin_role->deleteAll(['admin_id'=>$post['id']])) {
+            if (isset($role_id)) {
+                //新增用户角色
+                $insert=[];
+                foreach ($role_ids as $m=>$n) {
+                    $insert[]=[
+                            'admin_id'=>$post['id'],
+                            'role_id'=>$n
+                        ];
+                }
+                $table=AdminRole::tableName();
+                Yii::$app->db->createCommand()->batchInsert($table, ['admin_id', 'role_id'], $insert)->execute();
+            }
+        }
+        $transaction->commit();
+        return Helper::reset([], 0, 0);
     }
 
     /**
@@ -262,20 +244,24 @@ class AdminController extends DefaultController
         $model = new Admin();
         $db = Yii::$app->db;
         $transaction = $db->beginTransaction();
-        if($model->deleteAll(['id'=>$id])){
-            $info=new AdminInfo();
-            if($info->deleteAll(['id'=>$id])){
-                $admin_role=new AdminRole();
-                if ($admin_role->deleteAll(['admin_id'=>$id])) {
-                    $transaction->commit();
-                    return Helper::reset([], 0, 0);
-                }
-            }
+        if(!$model->deleteAll(['id'=>$id])){
+            $transaction->rollBack();
+            return Helper::reset([],0,1,$model->errors);
+        }
+        
+        $info=new AdminInfo();
+        if(!$info->deleteAll(['id'=>$id])){
             $transaction->rollBack();
             return Helper::reset([],0,1,$info->errors);
         }
-        $transaction->rollBack();
-        return Helper::reset([],0,1,$model->errors);
+
+        $admin_role=new AdminRole();
+        if (!$admin_role->deleteAll(['admin_id'=>$id])) {
+            $transaction->rollBack();
+            return Helper::reset([],0,1,$admin_role->errors);
+        }
+        $transaction->commit();
+        return Helper::reset([], 0, 0);
         
     }
 

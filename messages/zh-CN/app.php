@@ -23,6 +23,7 @@ return [
     'Password Repeat'=>'重复密码',
     'Admin Id' => '管理员id',
     'Admin Name' => '管理员名',
+    'Admin Status'=>'管理员状态',
     'Ok'=>'成功',
     'Fail'=>'失败',
     'createTime' => '创建时间',

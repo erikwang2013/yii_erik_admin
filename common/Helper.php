@@ -136,4 +136,37 @@ class Helper
             'img'=>$code->inline()
         ];
     }
+
+    /**
+     * 过滤存在的字段
+     *
+     * @Author erik
+     * @Email erik@erik.xyz
+     * @Url https://erik.xyz
+     * @DateTime 2021-04-08 09:49:21
+     * @param [type] $model
+     * @param [type] $data
+     * @param integer $status
+     * @return void
+     */
+    public static function filterKey($model,$data,$status=1){
+        if($status==0){
+            $attributes = array_flip($model->safeAttributes() ? $model->safeAttributes() : $model->attributes());
+            $data_info=[];
+            foreach($data as $name=>$value){
+                if (isset($attributes[$name])) {
+                    $data_info[$name]=$value;
+                }
+            }
+            return $data;
+        }else{
+            $attributes = array_flip($model->safeAttributes() ? $model->safeAttributes() : $model->attributes());
+            foreach($data as $name=>$value){
+                if (isset($attributes[$name])) {
+                    $model->$name=$value;
+                }
+            }
+        }
+        
+    }
 }
