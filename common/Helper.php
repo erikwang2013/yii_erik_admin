@@ -158,7 +158,7 @@ class Helper
                     $data_info[$name]=$value;
                 }
             }
-            return $data;
+            return $data_info;
         }else{
             $attributes = array_flip($model->safeAttributes() ? $model->safeAttributes() : $model->attributes());
             foreach($data as $name=>$value){

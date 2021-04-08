@@ -32,19 +32,11 @@ class AdminAuthorityController extends DefaultController
             return Helper::reset([],0,1,$error_page);
         }
         $model = new AdminAuthority(['scenario' => 'search']);
-        $attributes = array_flip($model->safeAttributes() ? $model->safeAttributes() : $model->attributes());
-        $data=[];
-        foreach($params as $name=>$value){
-            if (isset($attributes[$name])) {
-                $data[$name]=$value;
-            }else{
-                return Helper::reset([$name=>$value],0,1,Yii::t('app','Illegal request!'));
-            }
-        }
+        $data=Helper::filterKey($model,$params,0)?:[];
         $model->attributes=$data;
         $result=[];
         if ($model->validate()) {
-            $dataProvider = $model->search($params);
+            $dataProvider = $model->search($data);
             $result=ArrayHelper::toArray($dataProvider);
             return Helper::reset($result['list'],$result['count'],0);
         }
@@ -91,7 +83,8 @@ class AdminAuthorityController extends DefaultController
         $model =new AdminAuthority(['scenario' => 'update']);
         $update_data=$post;
         $post['id']=$id;
-        $model->attributes=$post;
+        $data=Helper::filterKey($model,$post,0);
+        $model->attributes=$data;
         if (!$model->validate()) {
             return Helper::reset([],0,1,CheckData::getValidateError($model->errors));  
         }

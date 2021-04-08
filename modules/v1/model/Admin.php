@@ -75,6 +75,12 @@ class Admin extends \yii\db\ActiveRecord
         return $this->hasOne(AdminInfo::className(), ['id' => 'id']);  
     }
 
+    public function getAdminRole(){
+        return $this->hasMany(AdminRoleInfo::className(),['id'=>'role_id'])
+        ->viaTable(AdminRole::tableName(), ['admin_id' => 'id']);  
+    }
+
+
     public function setPassword($password)
     {
         $this->hash = Yii::$app->security->generatePasswordHash($password);
@@ -95,21 +101,20 @@ class Admin extends \yii\db\ActiveRecord
      *
      * @return ActiveDataProvider
      */
-    public function search($params=[])
+    public function search($params=[],$page, $limit)
     {
-       
         $query = $this->find();
-        $pageSize=$params['limit'];
-        $page=$params['page'];
-        $table=Admin::tableName();
-        $query->andFilterWhere([$table.'.id' =>$params['id']])->andFilterWhere(['like',$table.'.name',$params['name']]);
+        $table=$this->tableName();
+        $query->andFilterWhere([$table.'.id' =>isset($params['id'])?$params['id']:''])
+        ->andFilterWhere(['like',$table.'.name',isset($params['name'])?$params['name']:'']);
         $query->joinWith(["adminInfo"=>function($query) use($params){
-            $table=AdminInfo::tableName();
-           return $query->andFilterWhere( ['like', $table.'.real_name',$params['real_name']])
-           ->andFilterWhere(['like', $table.'.phone',$params['phone']])
-           ->andFilterWhere(['like', $table.'.email',$params['email']])
-           ->andFilterWhere([$table.'.sex' =>$params['sex']]);
+            $info=AdminInfo::tableName();
+           return $query->andFilterWhere( ['like', $info.'.real_name',isset($params['real_name'])?$params['real_name']:''])
+           ->andFilterWhere(['like', $info.'.phone',isset($params['phone'])?$params['phone']:''])
+           ->andFilterWhere(['like', $info.'.email',isset($params['email'])?$params['email']:''])
+           ->andFilterWhere([$info.'.sex' =>isset($params['sex'])?$params['sex']:'']);
         }]);
+        $query->joinWith(["adminRole"]);
 
         $count=$query->count();
         if($count==0){
@@ -119,13 +124,24 @@ class Admin extends \yii\db\ActiveRecord
             ];
         }
         $page=$page-1>=0?$page-1:0;
-        $pages = new Pagination(['totalCount' => $count,'pageSize' => $pageSize,'page'=>$page]);
+        $pages = new Pagination(['totalCount' => $count,'pageSize' => $limit,'page'=>$page]);
         $dataProvider=$query->offset($pages->offset)->limit($pages->limit)->all();
         foreach($dataProvider as $k=>$v){
             $adminInfo=$v->adminInfo;
+            $adminRole=$v->adminRole;
+            $role=[];
+            if(isset($adminRole)){
+                foreach($adminRole as $m=>$n){
+                    $role[]=[
+                        'id'=>$n->id,
+                        'name'=>$n->name
+                    ];
+                }
+            }
             $dataProvider[$k]=[
                 'id'=>$v->id,
                 'name'=>$v->name,
+                'role'=>$role,
                 'real_name'=>$adminInfo->real_name,
                 'status'=>[
                     'key'=>$v->status,

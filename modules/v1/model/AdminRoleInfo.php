@@ -62,13 +62,18 @@ class AdminRoleInfo extends \yii\db\ActiveRecord
             'create_time' => Yii::t('app', 'Create Time'),
         ];
     }
-    public function search($params=[]){
+    public function getRoleAuthority(){
+        return $this->hasMany(AdminAuthority::className(),['id'=>'authority_id'])
+        ->viaTable(AdminRoleAuthority::tableName(), ['role_id' => 'id']);  
+    }
+
+    public function search($params=[],$page,$limit){
         $query = $this->find();
-        $pageSize=$params['limit'];
-        $page=$params['page'];
-        $query->andFilterWhere(['id' =>$params['id']])
-            ->andFilterWhere(['status' =>$params['status']])
-            ->andFilterWhere( ['like', 'name',$params['name']]);
+        $table=$this->tableName();
+        $query->andFilterWhere([$table.'.id' =>isset($params['id'])?$params['id']:''])
+            ->andFilterWhere([$table.'.status' =>isset($params['status'])?$params['status']:''])
+            ->andFilterWhere( ['like', $table.'.name',isset($params['name'])?$params['name']:'']);
+        $query->joinWith(["roleAuthority"]);
         $count=$query->count();
         if($count==0){
             return [
@@ -77,12 +82,24 @@ class AdminRoleInfo extends \yii\db\ActiveRecord
             ];
         }
         $page=$page-1>=0?$page-1:0;
-        $pages = new Pagination(['totalCount' => $count,'pageSize' => $pageSize,'page'=>$page]);
+        $pages = new Pagination(['totalCount' => $count,'pageSize' => $limit,'page'=>$page]);
         $dataProvider=$query->offset($pages->offset)->limit($pages->limit)->all();
         foreach($dataProvider as $k=>$v){
+            $roleAuthority=$v->roleAuthority;
+            $authority=[];
+            if(isset($roleAuthority)){
+                
+                foreach($roleAuthority as $m=>$n){
+                    $authority[]=[
+                        'id'=>$n->id,
+                        'name'=>$n->name
+                    ];
+                }
+            }
             $dataProvider[$k]=[
                 'id'=>$v->id,
                 'name'=>$v->name,
+                'authority'=>$authority,
                 'status'=>[
                     'key'=>$v->status,
                     'value'=>$v->status?Yii::t('app','Off'):Yii::t('app','On')

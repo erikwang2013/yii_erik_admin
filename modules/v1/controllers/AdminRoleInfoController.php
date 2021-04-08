@@ -27,25 +27,18 @@ class AdminRoleInfoController extends DefaultController
     {
         
         $params_config=Yii::$app->params;
-        $params['page']=Yii::$app->request->get('page',$params_config['page']);
-        $params['limit']=Yii::$app->request->get('limit',$params_config['limit']);
-        $error_page=CheckData::checkPage($params['page'],$params['limit']);
+        $params=Yii::$app->request->get();
+        $page=Yii::$app->request->get('page',$params_config['page']);
+        $limit=Yii::$app->request->get('limit',$params_config['limit']);
+        $error_page=CheckData::checkPage($page,$limit);
         if($error_page){
             return Helper::reset([],0,1,$error_page);
         }
         $model = new AdminRoleInfo(['scenario' => 'search']);
-        $attributes = array_flip($model->safeAttributes() ? $model->safeAttributes() : $model->attributes());
-        $data=[];
-        foreach($params as $name=>$value){
-            if (isset($attributes[$name])) {
-                $data[$name]=$value;
-            }else{
-                return Helper::reset([$name=>$value],0,1,Yii::t('app','Illegal request!'));
-            }
-        }
+        $data=Helper::filterKey($model,$params,0)?:[];
         $model->attributes=$data;
         if ($model->validate()) {
-            $dataProvider = $model->search($params);
+            $dataProvider = $model->search($data,$page,$limit);
             $result=ArrayHelper::toArray($dataProvider);
             return Helper::reset($result['list'],$result['count'],0);
         }
@@ -131,7 +124,8 @@ class AdminRoleInfoController extends DefaultController
         $model = new AdminRoleInfo(['scenario' => 'update']);
         $update_data=$post;
         $post['id']=$id;
-        $model->attributes=$post;
+        $data=Helper::filterKey($model,$post,0);
+        $model->attributes=$data;
         $db = Yii::$app->db;
         $transaction = $db->beginTransaction();
         if (!$model->validate()) {

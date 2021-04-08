@@ -25,44 +25,33 @@ class AdminController extends DefaultController
     public function actionIndex()
     {
         $params_config=Yii::$app->params;
-        $params['page']=Yii::$app->request->get('page',$params_config['page']);
-        $params['limit']=Yii::$app->request->get('limit',$params_config['limit']);
-        $error_page=CheckData::checkPage($params['page'], $params['limit']);
+        $params=Yii::$app->request->get();
+        $page=Yii::$app->request->get('page',$params_config['page']);
+        $limit=Yii::$app->request->get('limit',$params_config['limit']);
+        $error_page=CheckData::checkPage($page, $limit);
         if ($error_page) {
             return Helper::reset([], 0, 1, $error_page);
         }
         $model = new Admin(['scenario' => 'search']);
-        $attributes = array_flip($model->safeAttributes() ? $model->safeAttributes() : $model->attributes());
-        $data=[];
-        foreach($params as $name=>$value){
-            if (isset($attributes[$name])) {
-                $data[$name]=$value;
-            }else{
-                return Helper::reset([$name=>$value],0,1,Yii::t('app','Illegal request!'));
-            }
-        }
+        $data=Helper::filterKey($model,$params,0)?:[];
         $model->attributes=$data;
-        if ($model->validate()) {
-            $model_info=new AdminInfo(['scenario' => 'search']);
-            $attributes_info = array_flip($model_info->safeAttributes() ? $model_info->safeAttributes() : $model_info->attributes());
-            $data_info=[];
-            foreach($params as $name=>$value){
-                if (isset($attributes_info[$name])) {
-                    $data_info[$name]=$value;
-                }
-            }
-            if (count($data_info)>0) {
-                $model_info->attributes=$data_info;
-                if ($model_info->validate()) {
-                    $dataProvider = $model->search($params);
-                    $result=[];
-                    $result=ArrayHelper::toArray($dataProvider);
-                    return Helper::reset($result['list'], $result['count'], 0);
-                }
-            }
-            return Helper::reset([],0,1,CheckData::getValidateError($model_info->errors));
+        if (!$model->validate()) {
+            return Helper::reset([],0,1,CheckData::getValidateError($model->errors));
         }
-        return Helper::reset([],0,1,CheckData::getValidateError($model->errors));
+        
+        $model_info=new AdminInfo(['scenario' => 'search']);
+        $data_info=Helper::filterKey($model_info,$params,0)?:[];
+        if (count($data_info)>0) {
+            $model_info->attributes=$data_info;
+            if (!$model_info->validate()) {
+                return Helper::reset([],0,1,CheckData::getValidateError($model_info->errors));
+            }
+        }
+        $data_all=array_merge($data,$data_info);
+        $dataProvider = $model->search($data_all,$page,$limit);
+        $result=[];
+        $result=ArrayHelper::toArray($dataProvider);
+        return Helper::reset($result['list'], $result['count'], 0);
     }
 
 
@@ -105,7 +94,7 @@ class AdminController extends DefaultController
 
         //新增详情
         $info=new AdminInfo(['scenario' => 'create']);
-        $data_info=Helper::filterKey($info,$post,0);
+        $data_info=Helper::filterKey($info,$post,0)?:[];
         if (count($data_info)>0) {
             $info->attributes=$data_info;
             if (!$info->validate()) {

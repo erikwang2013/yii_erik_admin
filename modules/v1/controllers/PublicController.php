@@ -54,9 +54,9 @@ class PublicController extends DefaultController
         if($model->status==1){
             return Helper::reset([],0,1,Yii::t('app','Users are not allowed to log in, please contact the administrator'));
         }
-        $key=Yii::$app->getSecurity()->generateRandomString();
-        $token=base64_encode(md5($key.time()));
+        
         $result_model=Admin::findOne($model->id); 
+        $token=base64_encode(md5($result_model->setToken().time()));
         $result_model->access_token=$token;
         $result_model->save();
        if (!$result_model) {
