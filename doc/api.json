@@ -1,0 +1,1154 @@
+[
+  {
+    "index": 0,
+    "name": "公共分类",
+    "desc": "公共分类",
+    "add_time": 1612926283,
+    "up_time": 1612926283,
+    "list": [
+      {
+        "query_path": {
+          "path": "/public/login-out",
+          "params": []
+        },
+        "edit_uid": 0,
+        "status": "done",
+        "type": "static",
+        "req_body_is_json_schema": true,
+        "res_body_is_json_schema": true,
+        "api_opened": false,
+        "index": 0,
+        "tag": [],
+        "_id": 50,
+        "method": "GET",
+        "catid": 5,
+        "title": "登出",
+        "path": "/public/login-out",
+        "project_id": 7,
+        "req_params": [],
+        "res_body_type": "json",
+        "uid": 11,
+        "add_time": 1614606491,
+        "up_time": 1614606498,
+        "req_query": [
+          {
+            "required": "1",
+            "_id": "603cf0a2273e79cd985a5f34",
+            "name": "id",
+            "desc": ""
+          }
+        ],
+        "req_headers": [],
+        "req_body_form": [],
+        "__v": 0,
+        "markdown": "",
+        "desc": "",
+        "res_body": "{\"type\":\"object\",\"title\":\"empty object\",\"properties\":{}}"
+      },
+      {
+        "query_path": {
+          "path": "/public/login",
+          "params": []
+        },
+        "edit_uid": 0,
+        "status": "done",
+        "type": "static",
+        "req_body_is_json_schema": true,
+        "res_body_is_json_schema": true,
+        "api_opened": false,
+        "index": 0,
+        "tag": [],
+        "_id": 44,
+        "method": "GET",
+        "catid": 5,
+        "title": "登录",
+        "path": "/public/login",
+        "project_id": 7,
+        "req_params": [],
+        "res_body_type": "json",
+        "uid": 11,
+        "add_time": 1614501065,
+        "up_time": 1614690274,
+        "req_query": [
+          {
+            "required": "1",
+            "_id": "603e37e2273e79cd985a5f45",
+            "name": "user_name",
+            "desc": ""
+          },
+          {
+            "required": "1",
+            "_id": "603e37e2273e79cd985a5f44",
+            "name": "password",
+            "example": "",
+            "desc": ""
+          },
+          {
+            "required": "1",
+            "_id": "603e37e2273e79cd985a5f43",
+            "name": "code",
+            "example": "",
+            "desc": "随机id"
+          },
+          {
+            "required": "1",
+            "_id": "603e37e2273e79cd985a5f42",
+            "name": "code_number",
+            "example": "",
+            "desc": "随机id值"
+          }
+        ],
+        "req_headers": [],
+        "req_body_form": [],
+        "__v": 0,
+        "markdown": "",
+        "desc": "",
+        "res_body": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"number\"},\"count\":{\"type\":\"number\"},\"data\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"number\"},\"sex\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"string\",\"description\":\"性别\"},\"value\":{\"type\":\"string\",\"description\":\"性别名\"}},\"description\":\"性别\",\"required\":[\"key\",\"value\"]},\"user_name\":{\"type\":\"string\",\"description\":\"用户名\"},\"real_name\":{\"type\":\"string\",\"description\":\"真实姓名\"},\"phone\":{\"type\":\"string\",\"description\":\"手机\"},\"email\":{\"type\":\"string\",\"description\":\"邮箱\"},\"img\":{\"type\":\"string\",\"description\":\"头像\"},\"token\":{\"type\":\"string\",\"description\":\"token\"}}},\"msg\":{\"type\":\"string\"}}}"
+      },
+      {
+        "query_path": {
+          "path": "/public/captcha",
+          "params": []
+        },
+        "edit_uid": 0,
+        "status": "done",
+        "type": "static",
+        "req_body_is_json_schema": true,
+        "res_body_is_json_schema": true,
+        "api_opened": false,
+        "index": 0,
+        "tag": [],
+        "_id": 56,
+        "method": "GET",
+        "catid": 5,
+        "title": "获取验证码",
+        "path": "/public/captcha",
+        "project_id": 7,
+        "req_params": [],
+        "res_body_type": "json",
+        "uid": 11,
+        "add_time": 1614606660,
+        "up_time": 1614690213,
+        "req_query": [
+          {
+            "required": "1",
+            "_id": "603e37a5273e79cd985a5f3d",
+            "name": "code",
+            "desc": "随机id"
+          }
+        ],
+        "req_headers": [],
+        "req_body_form": [],
+        "__v": 0,
+        "markdown": "",
+        "desc": "",
+        "res_body": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"number\"},\"count\":{\"type\":\"number\"},\"data\":{\"type\":\"object\",\"properties\":{\"code_img\":{\"type\":\"string\"}}},\"msg\":{\"type\":\"string\"}}}"
+      }
+    ]
+  },
+  {
+    "index": 0,
+    "name": "用户管理",
+    "desc": null,
+    "add_time": 1613737191,
+    "up_time": 1613737191,
+    "list": [
+      {
+        "query_path": {
+          "path": "/admin/{id}",
+          "params": []
+        },
+        "edit_uid": 0,
+        "status": "done",
+        "type": "var",
+        "req_body_is_json_schema": true,
+        "res_body_is_json_schema": true,
+        "api_opened": false,
+        "index": 0,
+        "tag": [],
+        "_id": 26,
+        "method": "DELETE",
+        "catid": 8,
+        "title": "删除用户",
+        "path": "/admin/{id}",
+        "project_id": 7,
+        "req_params": [
+          {
+            "_id": "605377a0273e79cd985a606f",
+            "name": "id",
+            "desc": ""
+          }
+        ],
+        "res_body_type": "json",
+        "uid": 11,
+        "add_time": 1614005275,
+        "up_time": 1616082848,
+        "req_query": [],
+        "req_headers": [
+          {
+            "required": "1",
+            "_id": "605377a0273e79cd985a606e",
+            "name": "Content-Type",
+            "value": "application/x-www-form-urlencoded"
+          }
+        ],
+        "req_body_form": [],
+        "__v": 0,
+        "markdown": "",
+        "desc": "",
+        "res_body": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"number\"},\"count\":{\"type\":\"number\"},\"data\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"msg\":{\"type\":\"string\"}}}",
+        "req_body_type": "form"
+      },
+      {
+        "query_path": {
+          "path": "/admin",
+          "params": []
+        },
+        "edit_uid": 0,
+        "status": "done",
+        "type": "static",
+        "req_body_is_json_schema": true,
+        "res_body_is_json_schema": true,
+        "api_opened": false,
+        "index": 0,
+        "tag": [],
+        "_id": 14,
+        "method": "POST",
+        "catid": 8,
+        "title": "新增用户",
+        "path": "/admin",
+        "project_id": 7,
+        "req_params": [],
+        "res_body_type": "json",
+        "uid": 11,
+        "add_time": 1613998787,
+        "up_time": 1617705573,
+        "req_query": [],
+        "req_headers": [
+          {
+            "required": "1",
+            "_id": "606c3a655c72335a1dcf565a",
+            "name": "Content-Type",
+            "value": "application/x-www-form-urlencoded"
+          }
+        ],
+        "req_body_form": [
+          {
+            "required": "1",
+            "_id": "606c3a655c72335a1dcf5663",
+            "name": "name",
+            "type": "text",
+            "example": "张胜男",
+            "desc": "账号"
+          },
+          {
+            "required": "1",
+            "_id": "606c3a655c72335a1dcf5662",
+            "name": "password",
+            "type": "text",
+            "example": "123123",
+            "desc": "密码"
+          },
+          {
+            "required": "1",
+            "_id": "606c3a655c72335a1dcf5661",
+            "name": "password_repeat",
+            "type": "text",
+            "example": "",
+            "desc": "重复密码"
+          },
+          {
+            "required": "0",
+            "_id": "606c3a655c72335a1dcf5660",
+            "name": "real_name",
+            "type": "text",
+            "example": "",
+            "desc": "姓名"
+          },
+          {
+            "required": "0",
+            "_id": "606c3a655c72335a1dcf565f",
+            "name": "sex",
+            "type": "text",
+            "example": "",
+            "desc": "性别 0=女 1=男"
+          },
+          {
+            "required": "0",
+            "_id": "606c3a655c72335a1dcf565e",
+            "name": "phone",
+            "type": "text",
+            "example": "",
+            "desc": "手机号"
+          },
+          {
+            "required": "0",
+            "_id": "606c3a655c72335a1dcf565d",
+            "name": "email",
+            "type": "text",
+            "example": "",
+            "desc": "邮箱"
+          },
+          {
+            "required": "0",
+            "_id": "606c3a655c72335a1dcf565c",
+            "name": "img",
+            "type": "text",
+            "example": "",
+            "desc": "头像"
+          },
+          {
+            "required": "0",
+            "_id": "606c3a655c72335a1dcf565b",
+            "name": "role_ids",
+            "type": "text",
+            "example": "",
+            "desc": "角色id，多个角色用英文逗号隔开"
+          }
+        ],
+        "__v": 0,
+        "markdown": "",
+        "desc": "",
+        "res_body": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"number\"},\"count\":{\"type\":\"number\"},\"data\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"msg\":{\"type\":\"string\"}}}",
+        "req_body_type": "form"
+      },
+      {
+        "query_path": {
+          "path": "/admin/{id}",
+          "params": []
+        },
+        "edit_uid": 0,
+        "status": "done",
+        "type": "var",
+        "req_body_is_json_schema": true,
+        "res_body_is_json_schema": true,
+        "api_opened": false,
+        "index": 0,
+        "tag": [],
+        "_id": 20,
+        "method": "PUT",
+        "catid": 8,
+        "title": "更新用户",
+        "path": "/admin/{id}",
+        "project_id": 7,
+        "req_params": [
+          {
+            "_id": "606c3a5f5c72335a1dcf5650",
+            "name": "id",
+            "example": "6770338174544642049",
+            "desc": "id"
+          }
+        ],
+        "res_body_type": "json",
+        "req_query": [],
+        "req_headers": [
+          {
+            "required": "1",
+            "_id": "606c3a5f5c72335a1dcf5651",
+            "name": "Content-Type",
+            "value": "application/x-www-form-urlencoded"
+          }
+        ],
+        "req_body_form": [
+          {
+            "required": "0",
+            "_id": "606c3a5f5c72335a1dcf5659",
+            "name": "name",
+            "type": "text",
+            "desc": "用户账号"
+          },
+          {
+            "required": "0",
+            "_id": "606c3a5f5c72335a1dcf5658",
+            "name": "sex",
+            "type": "text",
+            "example": "",
+            "desc": "性别 0=女 1=男"
+          },
+          {
+            "required": "0",
+            "_id": "606c3a5f5c72335a1dcf5657",
+            "name": "real_name",
+            "type": "text",
+            "example": "",
+            "desc": "姓名"
+          },
+          {
+            "required": "0",
+            "_id": "606c3a5f5c72335a1dcf5656",
+            "name": "phone",
+            "type": "text",
+            "example": "",
+            "desc": "手机号"
+          },
+          {
+            "required": "0",
+            "_id": "606c3a5f5c72335a1dcf5655",
+            "name": "email",
+            "type": "text",
+            "example": "",
+            "desc": "邮箱"
+          },
+          {
+            "required": "0",
+            "_id": "606c3a5f5c72335a1dcf5654",
+            "name": "img",
+            "type": "text",
+            "example": "",
+            "desc": "头像"
+          },
+          {
+            "required": "0",
+            "_id": "606c3a5f5c72335a1dcf5653",
+            "name": "status",
+            "type": "text",
+            "example": "1",
+            "desc": "状态  0=开启 1=禁止"
+          },
+          {
+            "required": "0",
+            "_id": "606c3a5f5c72335a1dcf5652",
+            "name": "role_ids",
+            "type": "text",
+            "example": "",
+            "desc": "角色id，多个角色用英文逗号隔开"
+          }
+        ],
+        "markdown": "",
+        "desc": "",
+        "res_body": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"number\"},\"count\":{\"type\":\"number\"},\"data\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"msg\":{\"type\":\"string\"}}}",
+        "req_body_type": "form",
+        "uid": 11,
+        "add_time": 1614003377,
+        "up_time": 1617705567,
+        "__v": 0
+      },
+      {
+        "query_path": {
+          "path": "/admin",
+          "params": []
+        },
+        "edit_uid": 0,
+        "status": "done",
+        "type": "static",
+        "req_body_is_json_schema": true,
+        "res_body_is_json_schema": true,
+        "api_opened": false,
+        "index": 0,
+        "tag": [],
+        "_id": 8,
+        "method": "GET",
+        "catid": 8,
+        "title": "用户列表",
+        "path": "/admin",
+        "project_id": 7,
+        "req_params": [],
+        "res_body_type": "json",
+        "uid": 11,
+        "add_time": 1613737214,
+        "up_time": 1617275219,
+        "req_query": [
+          {
+            "required": "0",
+            "_id": "6065a95307b5c84d5ec523eb",
+            "name": "id",
+            "example": "",
+            "desc": "用户id"
+          },
+          {
+            "required": "0",
+            "_id": "6065a95307b5c84d5ec523ea",
+            "name": "name",
+            "example": "",
+            "desc": "用户名"
+          },
+          {
+            "required": "0",
+            "_id": "6065a95307b5c84d5ec523e9",
+            "name": "page",
+            "example": "1",
+            "desc": ""
+          },
+          {
+            "required": "0",
+            "_id": "6065a95307b5c84d5ec523e8",
+            "name": "limit",
+            "example": "25",
+            "desc": ""
+          },
+          {
+            "required": "0",
+            "_id": "6065a95307b5c84d5ec523e7",
+            "name": "real_name",
+            "example": "",
+            "desc": "真实姓名"
+          },
+          {
+            "required": "0",
+            "_id": "6065a95307b5c84d5ec523e6",
+            "name": "phone",
+            "example": "",
+            "desc": "手机号"
+          },
+          {
+            "required": "0",
+            "_id": "6065a95307b5c84d5ec523e5",
+            "name": "email",
+            "example": "",
+            "desc": "邮箱"
+          },
+          {
+            "required": "0",
+            "_id": "6065a95307b5c84d5ec523e4",
+            "name": "sex",
+            "example": "",
+            "desc": "性别"
+          }
+        ],
+        "req_headers": [
+          {
+            "required": "1",
+            "_id": "6065a95307b5c84d5ec523ec",
+            "name": "Content-Type",
+            "value": "application/x-www-form-urlencoded"
+          }
+        ],
+        "req_body_form": [],
+        "__v": 0,
+        "markdown": "",
+        "desc": "",
+        "res_body": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"number\"},\"count\":{\"type\":\"number\"},\"data\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"number\"},\"name\":{\"type\":\"string\",\"description\":\"用户名\"},\"real_name\":{\"type\":\"string\",\"description\":\"真实姓名\"},\"sex\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"number\",\"description\":\"性别名\"},\"value\":{\"type\":\"string\",\"description\":\"性别值\"}},\"description\":\"性别\"},\"status\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"string\",\"description\":\"状态\"},\"value\":{\"type\":\"string\",\"description\":\"状态值\"}},\"required\":[\"key\",\"value\"],\"description\":\"用户状态\"},\"phone\":{\"type\":\"string\",\"description\":\"手机号\"},\"email\":{\"type\":\"string\",\"description\":\"邮箱\"},\"img\":{\"type\":\"string\",\"description\":\"头像\"},\"create_time\":{\"type\":\"string\"},\"update_time\":{\"type\":\"string\"}},\"required\":[\"id\",\"name\",\"real_name\",\"sex\",\"phone\",\"email\",\"img\",\"create_time\",\"update_time\",\"status\"]}},\"msg\":{\"type\":\"string\"}}}",
+        "req_body_type": "form"
+      },
+      {
+        "query_path": {
+          "path": "/admin/reset-password",
+          "params": []
+        },
+        "edit_uid": 0,
+        "status": "done",
+        "type": "static",
+        "req_body_is_json_schema": true,
+        "res_body_is_json_schema": true,
+        "api_opened": false,
+        "index": 0,
+        "tag": [],
+        "_id": 32,
+        "method": "PUT",
+        "catid": 8,
+        "title": "重置密码",
+        "path": "/admin/reset-password",
+        "project_id": 7,
+        "req_params": [],
+        "res_body_type": "json",
+        "uid": 11,
+        "add_time": 1614086611,
+        "up_time": 1614181083,
+        "req_query": [
+          {
+            "required": "1",
+            "_id": "603672db273e79cd985a5f17",
+            "name": "id",
+            "example": "",
+            "desc": ""
+          }
+        ],
+        "req_headers": [
+          {
+            "required": "1",
+            "_id": "603672db273e79cd985a5f18",
+            "name": "Content-Type",
+            "value": "application/x-www-form-urlencoded"
+          }
+        ],
+        "req_body_form": [
+          {
+            "required": "1",
+            "_id": "603672db273e79cd985a5f1a",
+            "name": "password",
+            "type": "text",
+            "desc": "密码"
+          },
+          {
+            "required": "1",
+            "_id": "603672db273e79cd985a5f19",
+            "name": "password_repeat",
+            "type": "text",
+            "example": "",
+            "desc": "重复密码"
+          }
+        ],
+        "__v": 0,
+        "markdown": "",
+        "desc": "",
+        "res_body": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"number\"},\"count\":{\"type\":\"number\"},\"data\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"msg\":{\"type\":\"string\"}}}",
+        "req_body_type": "form"
+      }
+    ]
+  },
+  {
+    "index": 0,
+    "name": "权限管理",
+    "desc": null,
+    "add_time": 1615819084,
+    "up_time": 1615819084,
+    "list": [
+      {
+        "query_path": {
+          "path": "/admin-authority/{id}",
+          "params": []
+        },
+        "edit_uid": 0,
+        "status": "done",
+        "type": "var",
+        "req_body_is_json_schema": true,
+        "res_body_is_json_schema": true,
+        "api_opened": false,
+        "index": 0,
+        "tag": [],
+        "_id": 80,
+        "method": "DELETE",
+        "catid": 11,
+        "title": "删除权限",
+        "path": "/admin-authority/{id}",
+        "project_id": 7,
+        "req_params": [
+          {
+            "_id": "60537871273e79cd985a6077",
+            "name": "id",
+            "desc": ""
+          }
+        ],
+        "res_body_type": "json",
+        "req_query": [],
+        "req_headers": [
+          {
+            "required": "1",
+            "_id": "60537871273e79cd985a6078",
+            "name": "Content-Type",
+            "value": "application/x-www-form-urlencoded"
+          }
+        ],
+        "req_body_form": [],
+        "markdown": "",
+        "desc": "",
+        "res_body": "{\"type\":\"object\",\"title\":\"empty object\",\"properties\":{}}",
+        "req_body_type": "form",
+        "uid": 11,
+        "add_time": 1616083036,
+        "up_time": 1616083057,
+        "__v": 0
+      },
+      {
+        "query_path": {
+          "path": "/admin-authority",
+          "params": []
+        },
+        "edit_uid": 0,
+        "status": "done",
+        "type": "static",
+        "req_body_is_json_schema": true,
+        "res_body_is_json_schema": true,
+        "api_opened": false,
+        "index": 0,
+        "tag": [],
+        "_id": 68,
+        "method": "POST",
+        "catid": 11,
+        "title": "新增权限",
+        "path": "/admin-authority",
+        "project_id": 7,
+        "req_params": [],
+        "res_body_type": "json",
+        "uid": 11,
+        "add_time": 1616078461,
+        "up_time": 1617276020,
+        "req_query": [],
+        "req_headers": [
+          {
+            "required": "1",
+            "_id": "6065ac7407b5c84d5ec523ed",
+            "name": "Content-Type",
+            "value": "application/x-www-form-urlencoded"
+          }
+        ],
+        "req_body_form": [
+          {
+            "required": "0",
+            "_id": "6065ac7407b5c84d5ec523f2",
+            "name": "parent_id",
+            "type": "text",
+            "desc": "父级"
+          },
+          {
+            "required": "1",
+            "_id": "6065ac7407b5c84d5ec523f1",
+            "name": "code",
+            "type": "text",
+            "example": "",
+            "desc": "编码"
+          },
+          {
+            "required": "1",
+            "_id": "6065ac7407b5c84d5ec523f0",
+            "name": "name",
+            "type": "text",
+            "example": "",
+            "desc": "名称"
+          },
+          {
+            "required": "1",
+            "_id": "6065ac7407b5c84d5ec523ef",
+            "name": "show",
+            "type": "text",
+            "example": "",
+            "desc": "是否显示 0=显示 1=隐藏"
+          },
+          {
+            "required": "1",
+            "_id": "6065ac7407b5c84d5ec523ee",
+            "name": "status",
+            "type": "text",
+            "example": "",
+            "desc": "状态 0=开启 1=禁止"
+          }
+        ],
+        "__v": 0,
+        "markdown": "",
+        "desc": "",
+        "res_body": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"number\"},\"count\":{\"type\":\"number\"},\"data\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"msg\":{\"type\":\"string\"}}}",
+        "req_body_type": "form"
+      },
+      {
+        "query_path": {
+          "path": "/admin-authority/{id}",
+          "params": []
+        },
+        "edit_uid": 0,
+        "status": "done",
+        "type": "var",
+        "req_body_is_json_schema": true,
+        "res_body_is_json_schema": true,
+        "api_opened": false,
+        "index": 0,
+        "tag": [],
+        "_id": 74,
+        "method": "PUT",
+        "catid": 11,
+        "title": "更新权限",
+        "path": "/admin-authority/{id}",
+        "project_id": 7,
+        "req_params": [
+          {
+            "_id": "60537529273e79cd985a6067",
+            "name": "id",
+            "desc": ""
+          }
+        ],
+        "res_body_type": "json",
+        "req_query": [],
+        "req_headers": [
+          {
+            "required": "1",
+            "_id": "60537529273e79cd985a6068",
+            "name": "Content-Type",
+            "value": "application/x-www-form-urlencoded"
+          }
+        ],
+        "req_body_form": [
+          {
+            "required": "0",
+            "_id": "60537529273e79cd985a606d",
+            "name": "parent_id",
+            "type": "text",
+            "desc": "父级"
+          },
+          {
+            "required": "0",
+            "_id": "60537529273e79cd985a606c",
+            "name": "code",
+            "type": "text",
+            "example": "",
+            "desc": "编码"
+          },
+          {
+            "required": "0",
+            "_id": "60537529273e79cd985a606b",
+            "name": "name",
+            "type": "text",
+            "example": "",
+            "desc": "名称"
+          },
+          {
+            "required": "0",
+            "_id": "60537529273e79cd985a606a",
+            "name": "show",
+            "type": "text",
+            "example": "",
+            "desc": "是否显示 0=显示 1=隐藏"
+          },
+          {
+            "required": "0",
+            "_id": "60537529273e79cd985a6069",
+            "name": "status",
+            "type": "text",
+            "example": "",
+            "desc": "状态 0=开启 1=禁止"
+          }
+        ],
+        "markdown": "",
+        "desc": "",
+        "res_body": "{\"type\":\"object\",\"title\":\"empty object\",\"properties\":{}}",
+        "req_body_type": "form",
+        "uid": 11,
+        "add_time": 1616080034,
+        "up_time": 1616082217,
+        "__v": 0
+      },
+      {
+        "query_path": {
+          "path": "/admin-authority",
+          "params": []
+        },
+        "edit_uid": 0,
+        "status": "done",
+        "type": "static",
+        "req_body_is_json_schema": true,
+        "res_body_is_json_schema": true,
+        "api_opened": false,
+        "index": 0,
+        "tag": [],
+        "_id": 62,
+        "method": "GET",
+        "catid": 11,
+        "title": "权限列表",
+        "path": "/admin-authority",
+        "project_id": 7,
+        "req_params": [],
+        "res_body_type": "json",
+        "uid": 11,
+        "add_time": 1615819137,
+        "up_time": 1617276083,
+        "req_query": [
+          {
+            "required": "0",
+            "_id": "6065acb307b5c84d5ec5240a",
+            "name": "id",
+            "desc": ""
+          },
+          {
+            "required": "0",
+            "_id": "6065acb307b5c84d5ec52409",
+            "name": "name",
+            "example": "",
+            "desc": "权限名称"
+          },
+          {
+            "required": "0",
+            "_id": "6065acb307b5c84d5ec52408",
+            "name": "parent_id",
+            "example": "",
+            "desc": "父级"
+          },
+          {
+            "required": "0",
+            "_id": "6065acb307b5c84d5ec52407",
+            "name": "show",
+            "example": "",
+            "desc": "是否显示 0=显示 1=隐藏"
+          },
+          {
+            "required": "0",
+            "_id": "6065acb307b5c84d5ec52406",
+            "name": "status",
+            "example": "",
+            "desc": "状态 0=开启 1=禁止"
+          },
+          {
+            "required": "0",
+            "_id": "6065acb307b5c84d5ec52405",
+            "name": "page",
+            "example": "",
+            "desc": "1"
+          },
+          {
+            "required": "0",
+            "_id": "6065acb307b5c84d5ec52404",
+            "name": "limit",
+            "example": "",
+            "desc": "10"
+          },
+          {
+            "required": "0",
+            "_id": "6065acb307b5c84d5ec52403",
+            "name": "code",
+            "example": "",
+            "desc": "编码"
+          }
+        ],
+        "req_headers": [],
+        "req_body_form": [],
+        "__v": 0,
+        "markdown": "",
+        "desc": "",
+        "res_body": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"number\"},\"count\":{\"type\":\"number\"},\"data\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"number\"},\"name\":{\"type\":\"string\",\"description\":\"权限名称\"},\"code\":{\"type\":\"string\",\"description\":\"权限编码\"},\"status\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"number\"},\"value\":{\"type\":\"string\"}},\"description\":\"权限状态\"},\"show\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"number\"},\"value\":{\"type\":\"string\"}},\"description\":\"是否显示\"},\"parent_id\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"number\"},\"value\":{\"type\":\"string\"}},\"description\":\"父级\"}},\"required\":[\"id\",\"name\",\"code\",\"status\",\"show\",\"parent_id\"]}},\"msg\":{\"type\":\"string\"}}}"
+      }
+    ]
+  },
+  {
+    "index": 0,
+    "name": "角色管理",
+    "desc": null,
+    "add_time": 1617259380,
+    "up_time": 1617259380,
+    "list": [
+      {
+        "query_path": {
+          "path": "/admin-role-info",
+          "params": []
+        },
+        "edit_uid": 0,
+        "status": "done",
+        "type": "static",
+        "req_body_is_json_schema": true,
+        "res_body_is_json_schema": true,
+        "api_opened": false,
+        "index": 0,
+        "tag": [],
+        "_id": 86,
+        "method": "GET",
+        "catid": 14,
+        "title": "角色列表",
+        "path": "/admin-role-info",
+        "project_id": 7,
+        "req_params": [],
+        "res_body_type": "json",
+        "uid": 11,
+        "add_time": 1617259408,
+        "up_time": 1617349385,
+        "req_query": [
+          {
+            "required": "0",
+            "_id": "6066cb095c72335a1dcf5629",
+            "name": "id",
+            "desc": ""
+          },
+          {
+            "required": "0",
+            "_id": "6066cb095c72335a1dcf5628",
+            "name": "name",
+            "example": "",
+            "desc": "角色名称"
+          },
+          {
+            "required": "0",
+            "_id": "6066cb095c72335a1dcf5627",
+            "name": "status",
+            "example": "",
+            "desc": "角色状态 0=开启 1=禁止"
+          },
+          {
+            "required": "1",
+            "_id": "6066cb095c72335a1dcf5626",
+            "name": "page",
+            "example": "1",
+            "desc": "第几页"
+          },
+          {
+            "required": "1",
+            "_id": "6066cb095c72335a1dcf5625",
+            "name": "limit",
+            "example": "10",
+            "desc": "数量"
+          }
+        ],
+        "req_headers": [],
+        "req_body_form": [],
+        "__v": 0,
+        "markdown": "",
+        "desc": "",
+        "res_body": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"number\"},\"count\":{\"type\":\"number\"},\"data\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"number\"},\"name\":{\"type\":\"string\",\"description\":\"角色名称\"},\"create_time\":{\"type\":\"string\",\"description\":\"创建时间\"},\"status\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"number\"},\"value\":{\"type\":\"string\"}},\"description\":\"角色状态\"}}}},\"msg\":{\"type\":\"string\"}}}"
+      },
+      {
+        "query_path": {
+          "path": "/admin-role-info/{id}",
+          "params": []
+        },
+        "edit_uid": 0,
+        "status": "done",
+        "type": "var",
+        "req_body_is_json_schema": true,
+        "res_body_is_json_schema": true,
+        "api_opened": false,
+        "index": 0,
+        "tag": [],
+        "_id": 94,
+        "method": "DELETE",
+        "catid": 14,
+        "title": "角色删除",
+        "path": "/admin-role-info/{id}",
+        "project_id": 7,
+        "req_params": [
+          {
+            "_id": "6065a68207b5c84d5ec523d5",
+            "name": "id",
+            "desc": ""
+          }
+        ],
+        "res_body_type": "json",
+        "uid": 11,
+        "add_time": 1617274479,
+        "up_time": 1617274498,
+        "req_query": [],
+        "req_headers": [
+          {
+            "required": "1",
+            "_id": "6065a68207b5c84d5ec523d6",
+            "name": "Content-Type",
+            "value": "application/x-www-form-urlencoded"
+          }
+        ],
+        "req_body_form": [],
+        "__v": 0,
+        "markdown": "",
+        "desc": "",
+        "res_body": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"number\"},\"count\":{\"type\":\"number\"},\"data\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"msg\":{\"type\":\"string\"}}}",
+        "req_body_type": "form"
+      },
+      {
+        "query_path": {
+          "path": "/admin-role-info",
+          "params": []
+        },
+        "edit_uid": 0,
+        "status": "done",
+        "type": "static",
+        "req_body_is_json_schema": true,
+        "res_body_is_json_schema": true,
+        "api_opened": false,
+        "index": 0,
+        "tag": [],
+        "_id": 92,
+        "method": "POST",
+        "catid": 14,
+        "title": "角色新增",
+        "path": "/admin-role-info",
+        "project_id": 7,
+        "req_params": [],
+        "res_body_type": "json",
+        "req_query": [],
+        "req_headers": [
+          {
+            "required": "1",
+            "_id": "606c396c5c72335a1dcf5638",
+            "name": "Content-Type",
+            "value": "application/x-www-form-urlencoded"
+          }
+        ],
+        "req_body_form": [
+          {
+            "required": "1",
+            "_id": "606c396c5c72335a1dcf563b",
+            "name": "name",
+            "type": "text",
+            "desc": "角色名称"
+          },
+          {
+            "required": "1",
+            "_id": "606c396c5c72335a1dcf563a",
+            "name": "status",
+            "type": "text",
+            "example": "",
+            "desc": "角色状态 0=开启 1=禁止"
+          },
+          {
+            "required": "0",
+            "_id": "606c396c5c72335a1dcf5639",
+            "name": "authority_ids",
+            "type": "text",
+            "example": "",
+            "desc": "角色权限，多个值用英文逗号(,)隔开"
+          }
+        ],
+        "markdown": "",
+        "desc": "",
+        "res_body": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"number\"},\"count\":{\"type\":\"number\"},\"data\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"msg\":{\"type\":\"string\"}}}",
+        "uid": 11,
+        "add_time": 1617262291,
+        "up_time": 1617705324,
+        "__v": 0,
+        "req_body_type": "form"
+      },
+      {
+        "query_path": {
+          "path": "/admin-role-info/{id}",
+          "params": []
+        },
+        "edit_uid": 0,
+        "status": "done",
+        "type": "var",
+        "req_body_is_json_schema": true,
+        "res_body_is_json_schema": true,
+        "api_opened": false,
+        "index": 0,
+        "tag": [],
+        "_id": 93,
+        "method": "PUT",
+        "catid": 14,
+        "title": "角色更新",
+        "path": "/admin-role-info/{id}",
+        "project_id": 7,
+        "req_params": [
+          {
+            "_id": "606c285f5c72335a1dcf5633",
+            "name": "id",
+            "desc": ""
+          }
+        ],
+        "res_body_type": "json",
+        "req_query": [],
+        "req_headers": [
+          {
+            "required": "1",
+            "_id": "606c285f5c72335a1dcf5634",
+            "name": "Content-Type",
+            "value": "application/x-www-form-urlencoded"
+          }
+        ],
+        "req_body_form": [
+          {
+            "required": "0",
+            "_id": "606c285f5c72335a1dcf5637",
+            "name": "name",
+            "type": "text",
+            "desc": "角色名称"
+          },
+          {
+            "required": "0",
+            "_id": "606c285f5c72335a1dcf5636",
+            "name": "status",
+            "type": "text",
+            "example": "",
+            "desc": "角色状态 0=开启 1=禁止"
+          },
+          {
+            "required": "0",
+            "_id": "606c285f5c72335a1dcf5635",
+            "name": "authority_ids",
+            "type": "text",
+            "example": "",
+            "desc": "权限id，多个值英文逗号隔开"
+          }
+        ],
+        "markdown": "",
+        "desc": "",
+        "res_body": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"number\"},\"count\":{\"type\":\"number\"},\"data\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"msg\":{\"type\":\"string\"}}}",
+        "req_body_type": "form",
+        "uid": 11,
+        "add_time": 1617274202,
+        "up_time": 1617700959,
+        "__v": 0
+      }
+    ]
+  }
+]
