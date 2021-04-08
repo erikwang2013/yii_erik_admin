@@ -68,31 +68,31 @@
         "res_body_type": "json",
         "uid": 11,
         "add_time": 1614501065,
-        "up_time": 1614690274,
+        "up_time": 1617873751,
         "req_query": [
           {
             "required": "1",
-            "_id": "603e37e2273e79cd985a5f45",
+            "_id": "606ecb575c72335a1dcf56cf",
             "name": "user_name",
             "desc": ""
           },
           {
             "required": "1",
-            "_id": "603e37e2273e79cd985a5f44",
+            "_id": "606ecb575c72335a1dcf56ce",
             "name": "password",
             "example": "",
             "desc": ""
           },
           {
             "required": "1",
-            "_id": "603e37e2273e79cd985a5f43",
+            "_id": "606ecb575c72335a1dcf56cd",
             "name": "code",
             "example": "",
             "desc": "随机id"
           },
           {
             "required": "1",
-            "_id": "603e37e2273e79cd985a5f42",
+            "_id": "606ecb575c72335a1dcf56cc",
             "name": "code_number",
             "example": "",
             "desc": "随机id值"
@@ -103,7 +103,7 @@
         "__v": 0,
         "markdown": "",
         "desc": "",
-        "res_body": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"number\"},\"count\":{\"type\":\"number\"},\"data\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"number\"},\"sex\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"string\",\"description\":\"性别\"},\"value\":{\"type\":\"string\",\"description\":\"性别名\"}},\"description\":\"性别\",\"required\":[\"key\",\"value\"]},\"user_name\":{\"type\":\"string\",\"description\":\"用户名\"},\"real_name\":{\"type\":\"string\",\"description\":\"真实姓名\"},\"phone\":{\"type\":\"string\",\"description\":\"手机\"},\"email\":{\"type\":\"string\",\"description\":\"邮箱\"},\"img\":{\"type\":\"string\",\"description\":\"头像\"},\"token\":{\"type\":\"string\",\"description\":\"token\"}}},\"msg\":{\"type\":\"string\"}}}"
+        "res_body": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"number\"},\"count\":{\"type\":\"number\"},\"data\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"number\"},\"sex\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"number\"},\"value\":{\"type\":\"string\"}},\"description\":\"性别\"},\"user_name\":{\"type\":\"string\",\"description\":\"用户账号\"},\"nick_name\":{\"type\":\"string\",\"description\":\"昵称\"},\"real_name\":{\"type\":\"string\",\"description\":\"姓名\"},\"phone\":{\"type\":\"string\",\"description\":\"手机\"},\"email\":{\"type\":\"string\",\"description\":\"邮箱\"},\"img\":{\"type\":\"string\",\"description\":\"头像\"},\"token\":{\"type\":\"string\"},\"authority\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"number\"},\"name\":{\"type\":\"string\"},\"code\":{\"type\":\"string\"},\"status\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"number\"},\"value\":{\"type\":\"string\"}}},\"show\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"number\"},\"value\":{\"type\":\"string\"}}},\"parent\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"number\"},\"value\":{\"type\":\"string\"}}}},\"required\":[\"id\",\"name\",\"code\",\"status\",\"show\",\"parent\"]},\"description\":\"权限\"}},\"required\":[\"nick_name\"]},\"msg\":{\"type\":\"string\"}}}"
       },
       {
         "query_path": {
@@ -222,12 +222,12 @@
         "res_body_type": "json",
         "uid": 11,
         "add_time": 1613998787,
-        "up_time": 1617705573,
+        "up_time": 1617873320,
         "req_query": [],
         "req_headers": [
           {
             "required": "1",
-            "_id": "606c3a655c72335a1dcf565a",
+            "_id": "606ec9a85c72335a1dcf56b7",
             "name": "Content-Type",
             "value": "application/x-www-form-urlencoded"
           }
@@ -235,15 +235,23 @@
         "req_body_form": [
           {
             "required": "1",
-            "_id": "606c3a655c72335a1dcf5663",
+            "_id": "606ec9a85c72335a1dcf56c1",
             "name": "name",
             "type": "text",
             "example": "张胜男",
             "desc": "账号"
           },
           {
+            "required": "0",
+            "_id": "606ec9a85c72335a1dcf56c0",
+            "name": "nick_name",
+            "type": "text",
+            "example": "",
+            "desc": "昵称"
+          },
+          {
             "required": "1",
-            "_id": "606c3a655c72335a1dcf5662",
+            "_id": "606ec9a85c72335a1dcf56bf",
             "name": "password",
             "type": "text",
             "example": "123123",
@@ -251,7 +259,7 @@
           },
           {
             "required": "1",
-            "_id": "606c3a655c72335a1dcf5661",
+            "_id": "606ec9a85c72335a1dcf56be",
             "name": "password_repeat",
             "type": "text",
             "example": "",
@@ -259,7 +267,7 @@
           },
           {
             "required": "0",
-            "_id": "606c3a655c72335a1dcf5660",
+            "_id": "606ec9a85c72335a1dcf56bd",
             "name": "real_name",
             "type": "text",
             "example": "",
@@ -267,7 +275,7 @@
           },
           {
             "required": "0",
-            "_id": "606c3a655c72335a1dcf565f",
+            "_id": "606ec9a85c72335a1dcf56bc",
             "name": "sex",
             "type": "text",
             "example": "",
@@ -275,7 +283,7 @@
           },
           {
             "required": "0",
-            "_id": "606c3a655c72335a1dcf565e",
+            "_id": "606ec9a85c72335a1dcf56bb",
             "name": "phone",
             "type": "text",
             "example": "",
@@ -283,7 +291,7 @@
           },
           {
             "required": "0",
-            "_id": "606c3a655c72335a1dcf565d",
+            "_id": "606ec9a85c72335a1dcf56ba",
             "name": "email",
             "type": "text",
             "example": "",
@@ -291,7 +299,7 @@
           },
           {
             "required": "0",
-            "_id": "606c3a655c72335a1dcf565c",
+            "_id": "606ec9a85c72335a1dcf56b9",
             "name": "img",
             "type": "text",
             "example": "",
@@ -299,7 +307,7 @@
           },
           {
             "required": "0",
-            "_id": "606c3a655c72335a1dcf565b",
+            "_id": "606ec9a85c72335a1dcf56b8",
             "name": "role_ids",
             "type": "text",
             "example": "",
@@ -333,7 +341,7 @@
         "project_id": 7,
         "req_params": [
           {
-            "_id": "606c3a5f5c72335a1dcf5650",
+            "_id": "606ec99e5c72335a1dcf56ac",
             "name": "id",
             "example": "6770338174544642049",
             "desc": "id"
@@ -344,7 +352,7 @@
         "req_headers": [
           {
             "required": "1",
-            "_id": "606c3a5f5c72335a1dcf5651",
+            "_id": "606ec99e5c72335a1dcf56ad",
             "name": "Content-Type",
             "value": "application/x-www-form-urlencoded"
           }
@@ -352,14 +360,22 @@
         "req_body_form": [
           {
             "required": "0",
-            "_id": "606c3a5f5c72335a1dcf5659",
+            "_id": "606ec99e5c72335a1dcf56b6",
             "name": "name",
             "type": "text",
             "desc": "用户账号"
           },
           {
             "required": "0",
-            "_id": "606c3a5f5c72335a1dcf5658",
+            "_id": "606ec99e5c72335a1dcf56b5",
+            "name": "nick_name",
+            "type": "text",
+            "example": "",
+            "desc": "昵称"
+          },
+          {
+            "required": "0",
+            "_id": "606ec99e5c72335a1dcf56b4",
             "name": "sex",
             "type": "text",
             "example": "",
@@ -367,7 +383,7 @@
           },
           {
             "required": "0",
-            "_id": "606c3a5f5c72335a1dcf5657",
+            "_id": "606ec99e5c72335a1dcf56b3",
             "name": "real_name",
             "type": "text",
             "example": "",
@@ -375,7 +391,7 @@
           },
           {
             "required": "0",
-            "_id": "606c3a5f5c72335a1dcf5656",
+            "_id": "606ec99e5c72335a1dcf56b2",
             "name": "phone",
             "type": "text",
             "example": "",
@@ -383,7 +399,7 @@
           },
           {
             "required": "0",
-            "_id": "606c3a5f5c72335a1dcf5655",
+            "_id": "606ec99e5c72335a1dcf56b1",
             "name": "email",
             "type": "text",
             "example": "",
@@ -391,7 +407,7 @@
           },
           {
             "required": "0",
-            "_id": "606c3a5f5c72335a1dcf5654",
+            "_id": "606ec99e5c72335a1dcf56b0",
             "name": "img",
             "type": "text",
             "example": "",
@@ -399,7 +415,7 @@
           },
           {
             "required": "0",
-            "_id": "606c3a5f5c72335a1dcf5653",
+            "_id": "606ec99e5c72335a1dcf56af",
             "name": "status",
             "type": "text",
             "example": "1",
@@ -407,7 +423,7 @@
           },
           {
             "required": "0",
-            "_id": "606c3a5f5c72335a1dcf5652",
+            "_id": "606ec99e5c72335a1dcf56ae",
             "name": "role_ids",
             "type": "text",
             "example": "",
@@ -420,7 +436,7 @@
         "req_body_type": "form",
         "uid": 11,
         "add_time": 1614003377,
-        "up_time": 1617705567,
+        "up_time": 1617873310,
         "__v": 0
       },
       {
@@ -446,60 +462,67 @@
         "res_body_type": "json",
         "uid": 11,
         "add_time": 1613737214,
-        "up_time": 1617275219,
+        "up_time": 1617873788,
         "req_query": [
           {
             "required": "0",
-            "_id": "6065a95307b5c84d5ec523eb",
+            "_id": "606ecb7c5c72335a1dcf56d8",
             "name": "id",
             "example": "",
             "desc": "用户id"
           },
           {
             "required": "0",
-            "_id": "6065a95307b5c84d5ec523ea",
+            "_id": "606ecb7c5c72335a1dcf56d7",
             "name": "name",
             "example": "",
             "desc": "用户名"
           },
           {
             "required": "0",
-            "_id": "6065a95307b5c84d5ec523e9",
+            "_id": "606ecb7c5c72335a1dcf56d6",
+            "name": "nick_name",
+            "example": "",
+            "desc": "昵称"
+          },
+          {
+            "required": "0",
+            "_id": "606ecb7c5c72335a1dcf56d5",
             "name": "page",
             "example": "1",
             "desc": ""
           },
           {
             "required": "0",
-            "_id": "6065a95307b5c84d5ec523e8",
+            "_id": "606ecb7c5c72335a1dcf56d4",
             "name": "limit",
             "example": "25",
             "desc": ""
           },
           {
             "required": "0",
-            "_id": "6065a95307b5c84d5ec523e7",
+            "_id": "606ecb7c5c72335a1dcf56d3",
             "name": "real_name",
             "example": "",
             "desc": "真实姓名"
           },
           {
             "required": "0",
-            "_id": "6065a95307b5c84d5ec523e6",
+            "_id": "606ecb7c5c72335a1dcf56d2",
             "name": "phone",
             "example": "",
             "desc": "手机号"
           },
           {
             "required": "0",
-            "_id": "6065a95307b5c84d5ec523e5",
+            "_id": "606ecb7c5c72335a1dcf56d1",
             "name": "email",
             "example": "",
             "desc": "邮箱"
           },
           {
             "required": "0",
-            "_id": "6065a95307b5c84d5ec523e4",
+            "_id": "606ecb7c5c72335a1dcf56d0",
             "name": "sex",
             "example": "",
             "desc": "性别"
@@ -508,7 +531,7 @@
         "req_headers": [
           {
             "required": "1",
-            "_id": "6065a95307b5c84d5ec523ec",
+            "_id": "606ecb7c5c72335a1dcf56d9",
             "name": "Content-Type",
             "value": "application/x-www-form-urlencoded"
           }
@@ -517,7 +540,7 @@
         "__v": 0,
         "markdown": "",
         "desc": "",
-        "res_body": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"number\"},\"count\":{\"type\":\"number\"},\"data\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"number\"},\"name\":{\"type\":\"string\",\"description\":\"用户名\"},\"real_name\":{\"type\":\"string\",\"description\":\"真实姓名\"},\"sex\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"number\",\"description\":\"性别名\"},\"value\":{\"type\":\"string\",\"description\":\"性别值\"}},\"description\":\"性别\"},\"status\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"string\",\"description\":\"状态\"},\"value\":{\"type\":\"string\",\"description\":\"状态值\"}},\"required\":[\"key\",\"value\"],\"description\":\"用户状态\"},\"phone\":{\"type\":\"string\",\"description\":\"手机号\"},\"email\":{\"type\":\"string\",\"description\":\"邮箱\"},\"img\":{\"type\":\"string\",\"description\":\"头像\"},\"create_time\":{\"type\":\"string\"},\"update_time\":{\"type\":\"string\"}},\"required\":[\"id\",\"name\",\"real_name\",\"sex\",\"phone\",\"email\",\"img\",\"create_time\",\"update_time\",\"status\"]}},\"msg\":{\"type\":\"string\"}}}",
+        "res_body": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"number\"},\"count\":{\"type\":\"number\"},\"data\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"number\"},\"name\":{\"type\":\"string\",\"description\":\"用户名\"},\"nick_name\":{\"type\":\"string\",\"description\":\"昵称\"},\"role\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\"},\"name\":{\"type\":\"string\"}},\"required\":[\"id\",\"name\"]},\"description\":\"用户角色\"},\"real_name\":{\"type\":\"string\",\"description\":\"真实姓名\"},\"sex\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"number\",\"description\":\"性别名\"},\"value\":{\"type\":\"string\",\"description\":\"性别值\"}},\"description\":\"性别\"},\"status\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"string\",\"description\":\"状态\"},\"value\":{\"type\":\"string\",\"description\":\"状态值\"}},\"required\":[\"key\",\"value\"],\"description\":\"用户状态\"},\"phone\":{\"type\":\"string\",\"description\":\"手机号\"},\"email\":{\"type\":\"string\",\"description\":\"邮箱\"},\"img\":{\"type\":\"string\",\"description\":\"头像\"},\"create_time\":{\"type\":\"string\"},\"update_time\":{\"type\":\"string\"}},\"required\":[\"id\",\"name\",\"real_name\",\"sex\",\"phone\",\"email\",\"img\",\"create_time\",\"update_time\",\"status\",\"role\",\"nick_name\"]}},\"msg\":{\"type\":\"string\"}}}",
         "req_body_type": "form"
       },
       {
@@ -828,59 +851,59 @@
         "res_body_type": "json",
         "uid": 11,
         "add_time": 1615819137,
-        "up_time": 1617276083,
+        "up_time": 1617869987,
         "req_query": [
           {
             "required": "0",
-            "_id": "6065acb307b5c84d5ec5240a",
+            "_id": "606ebca35c72335a1dcf5687",
             "name": "id",
             "desc": ""
           },
           {
             "required": "0",
-            "_id": "6065acb307b5c84d5ec52409",
+            "_id": "606ebca35c72335a1dcf5686",
             "name": "name",
             "example": "",
             "desc": "权限名称"
           },
           {
             "required": "0",
-            "_id": "6065acb307b5c84d5ec52408",
+            "_id": "606ebca35c72335a1dcf5685",
             "name": "parent_id",
             "example": "",
             "desc": "父级"
           },
           {
             "required": "0",
-            "_id": "6065acb307b5c84d5ec52407",
+            "_id": "606ebca35c72335a1dcf5684",
             "name": "show",
             "example": "",
             "desc": "是否显示 0=显示 1=隐藏"
           },
           {
             "required": "0",
-            "_id": "6065acb307b5c84d5ec52406",
+            "_id": "606ebca35c72335a1dcf5683",
             "name": "status",
             "example": "",
             "desc": "状态 0=开启 1=禁止"
           },
           {
             "required": "0",
-            "_id": "6065acb307b5c84d5ec52405",
+            "_id": "606ebca35c72335a1dcf5682",
             "name": "page",
             "example": "",
             "desc": "1"
           },
           {
             "required": "0",
-            "_id": "6065acb307b5c84d5ec52404",
+            "_id": "606ebca35c72335a1dcf5681",
             "name": "limit",
             "example": "",
             "desc": "10"
           },
           {
             "required": "0",
-            "_id": "6065acb307b5c84d5ec52403",
+            "_id": "606ebca35c72335a1dcf5680",
             "name": "code",
             "example": "",
             "desc": "编码"
@@ -891,7 +914,7 @@
         "__v": 0,
         "markdown": "",
         "desc": "",
-        "res_body": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"number\"},\"count\":{\"type\":\"number\"},\"data\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"number\"},\"name\":{\"type\":\"string\",\"description\":\"权限名称\"},\"code\":{\"type\":\"string\",\"description\":\"权限编码\"},\"status\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"number\"},\"value\":{\"type\":\"string\"}},\"description\":\"权限状态\"},\"show\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"number\"},\"value\":{\"type\":\"string\"}},\"description\":\"是否显示\"},\"parent_id\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"number\"},\"value\":{\"type\":\"string\"}},\"description\":\"父级\"}},\"required\":[\"id\",\"name\",\"code\",\"status\",\"show\",\"parent_id\"]}},\"msg\":{\"type\":\"string\"}}}"
+        "res_body": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"number\"},\"count\":{\"type\":\"number\"},\"data\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"number\"},\"name\":{\"type\":\"string\",\"description\":\"权限名称\"},\"code\":{\"type\":\"string\",\"description\":\"权限编码\"},\"status\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"number\"},\"value\":{\"type\":\"string\"}},\"description\":\"权限状态\"},\"show\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"number\"},\"value\":{\"type\":\"string\"}},\"description\":\"是否显示\"},\"parent\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"number\"},\"value\":{\"type\":\"string\"}},\"description\":\"父级\"}},\"required\":[\"id\",\"name\",\"code\",\"status\",\"show\",\"parent\"]}},\"msg\":{\"type\":\"string\"}}}"
       }
     ]
   },
@@ -925,38 +948,38 @@
         "res_body_type": "json",
         "uid": 11,
         "add_time": 1617259408,
-        "up_time": 1617349385,
+        "up_time": 1617862350,
         "req_query": [
           {
             "required": "0",
-            "_id": "6066cb095c72335a1dcf5629",
+            "_id": "606e9ece5c72335a1dcf5676",
             "name": "id",
             "desc": ""
           },
           {
             "required": "0",
-            "_id": "6066cb095c72335a1dcf5628",
+            "_id": "606e9ece5c72335a1dcf5675",
             "name": "name",
             "example": "",
             "desc": "角色名称"
           },
           {
             "required": "0",
-            "_id": "6066cb095c72335a1dcf5627",
+            "_id": "606e9ece5c72335a1dcf5674",
             "name": "status",
             "example": "",
             "desc": "角色状态 0=开启 1=禁止"
           },
           {
             "required": "1",
-            "_id": "6066cb095c72335a1dcf5626",
+            "_id": "606e9ece5c72335a1dcf5673",
             "name": "page",
             "example": "1",
             "desc": "第几页"
           },
           {
             "required": "1",
-            "_id": "6066cb095c72335a1dcf5625",
+            "_id": "606e9ece5c72335a1dcf5672",
             "name": "limit",
             "example": "10",
             "desc": "数量"
@@ -967,7 +990,7 @@
         "__v": 0,
         "markdown": "",
         "desc": "",
-        "res_body": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"number\"},\"count\":{\"type\":\"number\"},\"data\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"number\"},\"name\":{\"type\":\"string\",\"description\":\"角色名称\"},\"create_time\":{\"type\":\"string\",\"description\":\"创建时间\"},\"status\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"number\"},\"value\":{\"type\":\"string\"}},\"description\":\"角色状态\"}}}},\"msg\":{\"type\":\"string\"}}}"
+        "res_body": "{\"$schema\":\"http://json-schema.org/draft-04/schema#\",\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"number\"},\"count\":{\"type\":\"number\"},\"data\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"number\"},\"name\":{\"type\":\"string\",\"description\":\"角色名称\"},\"authority\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"number\"},\"name\":{\"type\":\"string\"}},\"required\":[\"id\",\"name\"]},\"description\":\"角色权限\"},\"status\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"number\"},\"value\":{\"type\":\"string\"}},\"description\":\"角色状态\"},\"create_time\":{\"type\":\"string\"}},\"required\":[\"id\",\"name\",\"authority\",\"status\",\"create_time\"]}},\"msg\":{\"type\":\"string\"}}}"
       },
       {
         "query_path": {
