@@ -32,8 +32,7 @@ class AdminRoleInfo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id'], 'required','on'=>['create','update']],
-            [['name','status'], 'required','on'=>['create']],
+            [['id','name','status'], 'required','on'=>['create']],
             [['id', 'status'], 'integer'],
             [['status'], 'in','range'=>[0,1]],
             ['id', 'compare', 'compareValue' => 0, 'operator' => '>'],

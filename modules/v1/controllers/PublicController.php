@@ -48,9 +48,9 @@ class PublicController extends DefaultController
         Helper::deleteCache($code);
 
         //查询用户
-        $model=new Admin();
-        $table=$model->tableName();
-        $model = $model::find()->where($table.'.name=:name',[':name'=>$user_name])->joinWith("adminInfo")->joinWith(["adminRole"])->one();
+        $model_admin=new Admin();
+        $table=$model_admin->tableName();
+        $model = $model_admin::find()->where($table.'.name=:name',[':name'=>$user_name])->joinWith("adminInfo")->joinWith(["adminRole"])->one();
         $admin_info=$model->adminInfo;
         $admin_role=$model->adminRole;
         if(!$model){
@@ -128,14 +128,15 @@ class PublicController extends DefaultController
        
        //组合登录用户数据
        $data=[
-            'id'=>$model->id,
+            'id'=>$result_model->id,
             'sex'=>[
                 'key'=>$admin_info->sex,
                 'value'=>$admin_info->sex?Yii::t('app','Man'):Yii::t('app','Woman')
             ],
-            'user_name'=>$model->name,
+            'user_name'=>$result_model->name,
+            'nick_name'=>$result_model->nick_name,
+            'phone'=>$result_model->phone,
             'real_name'=>$admin_info->real_name,
-            'phone'=>$admin_info->phone,
             'email'=>$admin_info->email,
             'img'=>$admin_info->img,
             'token'=>$token,

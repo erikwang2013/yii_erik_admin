@@ -82,6 +82,9 @@ class AdminController extends DefaultController
         $post['id']=Helper::getCreateId();
         $model->setPassword($post['password']);
         $data=Helper::filterKey($model,$post,0);
+        if(!isset($post['nick_name'])){
+            $data['nick_name']='erik_'.time();
+        }
         $model->attributes=$data;
         if (!$model->validate()) {
             $transaction->rollBack();
@@ -149,18 +152,20 @@ class AdminController extends DefaultController
         if(count($post)==0){
             return Helper::reset([],0,1,Yii::t('app','Update at least one data'));
         }
-       $post['id']=$id;
+       //$post['id']=$id;
        $admin=new Admin(['scenario' => 'update']);
        //过滤存在的字段
        $data=Helper::filterKey($admin,$post,0);
        $db = Yii::$app->db;
        $transaction = $db->beginTransaction();
+       //unset($post['id']);
         $admin->attributes=$data;
         if (!$admin->validate()) {
             $transaction->rollBack();
             return Helper::reset([],0,1,CheckData::getValidateError($admin->errors));
         }
-        $model=$this->findModel($post['id']);
+        $model=$this->findModel($id);
+       
         //过滤符合的数据
         Helper::filterKey($model,$post);
         //保存用户基本信息
@@ -184,8 +189,7 @@ class AdminController extends DefaultController
             $transaction->rollBack();
             return Helper::reset([],0,1,CheckData::getValidateError($admin_info->errors));
         }
-        $info=$this->findInfoModel($post['id']);
-        unset($data_info['id']);
+        $info=$this->findInfoModel($id);
         //过滤符合的数据
         Helper::filterKey($info,$data_info);
         //保存用户详情
@@ -196,13 +200,13 @@ class AdminController extends DefaultController
         
         //删除用户角色
         $admin_role=new AdminRole();
-        if ($admin_role->deleteAll(['admin_id'=>$post['id']])) {
+        if ($admin_role->deleteAll(['admin_id'=>$id])) {
             if (isset($role_id)) {
                 //新增用户角色
                 $insert=[];
                 foreach ($role_ids as $m=>$n) {
                     $insert[]=[
-                            'admin_id'=>$post['id'],
+                            'admin_id'=>$id,
                             'role_id'=>$n
                         ];
                 }

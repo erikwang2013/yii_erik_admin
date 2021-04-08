@@ -24,6 +24,7 @@ return [
     'Admin Id' => '管理员id',
     'Admin Name' => '管理员名',
     'Admin Status'=>'管理员状态',
+    'Nickname'=>'昵称',
     'Ok'=>'成功',
     'Fail'=>'失败',
     'createTime' => '创建时间',

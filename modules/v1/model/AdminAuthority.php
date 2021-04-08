@@ -34,8 +34,7 @@ class AdminAuthority extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id'], 'required','on'=>['create','update']],
-            [['code','name','parent_id','show','status'],'required','on'=>['create']],
+            [['id','code','name','parent_id','show','status'],'required','on'=>['create']],
             [['id', 'parent_id', 'show', 'status'], 'integer','on'=>['create','update','search']],
             ['id', 'compare', 'compareValue' => 0, 'operator' => '>'],
             [['code'], 'string', 'max' => 20],
@@ -48,7 +47,7 @@ class AdminAuthority extends \yii\db\ActiveRecord
     public function scenarios()
     {
         return [
-            self::SCENARIO_ADMIN_AUTHORITY_UPDATE=>['id','name','status','id','code','show','parent_id'],
+            self::SCENARIO_ADMIN_AUTHORITY_UPDATE=>['id','name','status','code','show','parent_id'],
             self::SCENARIO_ADMIN_AUTHORITY_CREATE=>['id','name','parent_id','show','status','code'],
             self::SCENARIO_ADMIN_AUTHORITY_SEARCH=>['id','name','parent_id','show','status']
         ];

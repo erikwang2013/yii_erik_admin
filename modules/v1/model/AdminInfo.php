@@ -35,11 +35,10 @@ class AdminInfo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id','email','phone'], 'unique','on'=>['create','update']],
+            [['id','email'], 'unique','on'=>['create','update']],
             [['id'], 'required','on'=>['create','update']],
             [['sex'], 'in','range'=>[0,1]],
             [['id','sex'], 'integer'],
-            [['phone'],'match','pattern'=>'/^[1][345678][0-9]{9}$/'],
             [['img'], 'string','max'=>200],
             [['real_name'],'string','max'=>18],
             ['email', 'email'],
@@ -50,9 +49,9 @@ class AdminInfo extends \yii\db\ActiveRecord
     public function scenarios()
     {
         return [
-            self::SCENARIO_ADMIN_INFO_UPDATE=>['sex','phone','real_name','email','img'],
-            self::SCENARIO_ADMIN_INFO_CREATE=>['id','sex','phone','real_name','email','img','create_time','update_time'],
-            self::SCENARIO_ADMIN_INFO_SEARCH=>['real_name','phone','email','sex']
+            self::SCENARIO_ADMIN_INFO_UPDATE=>['sex','real_name','email','img'],
+            self::SCENARIO_ADMIN_INFO_CREATE=>['id','sex','real_name','email','img','create_time','update_time'],
+            self::SCENARIO_ADMIN_INFO_SEARCH=>['real_name','email','sex']
         ];
     }
     /**
@@ -64,7 +63,6 @@ class AdminInfo extends \yii\db\ActiveRecord
             'id' => Yii::t('app', 'Admin Id'),
             'real_name' => Yii::t('app', 'Real Name'),
             'sex' => Yii::t('app', 'Sex'),
-            'phone' => Yii::t('app', 'Phone'),
             'email' => Yii::t('app', 'Email'),
             'img' => Yii::t('app', 'Header Img'),
             'create_time' => Yii::t('app', 'Create Time'),
