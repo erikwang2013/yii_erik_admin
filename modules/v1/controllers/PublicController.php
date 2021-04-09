@@ -50,7 +50,14 @@ class PublicController extends DefaultController
         //查询用户
         $model_admin=new Admin();
         $table=$model_admin->tableName();
-        $model = $model_admin::find()->where($table.'.name=:name',[':name'=>$user_name])->joinWith("adminInfo")->joinWith(["adminRole"])->one();
+        $query_admin=$model_admin::find();
+        
+        if (preg_match('/^[1][345678][0-9]{9}$/',$user_name)) {
+            $query_admin->where($table.'.phone=:phone', [':phone'=>$user_name]);
+        }else{
+            $query_admin->where($table.'.name=:name',[':name'=>$user_name]);
+        }
+        $model = $query_admin->joinWith("adminInfo")->joinWith(["adminRole"])->one();
         $admin_info=$model->adminInfo;
         $admin_role=$model->adminRole;
         if(!$model){

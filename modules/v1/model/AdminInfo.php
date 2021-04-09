@@ -35,7 +35,7 @@ class AdminInfo extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id','email'], 'unique','on'=>['create','update']],
+            [['id','email','real_name'], 'unique','on'=>['create','update']],
             [['id'], 'required','on'=>['create','update']],
             [['sex'], 'in','range'=>[0,1]],
             [['id','sex'], 'integer'],

@@ -39,7 +39,7 @@ class AdminAuthority extends \yii\db\ActiveRecord
             ['id', 'compare', 'compareValue' => 0, 'operator' => '>'],
             [['code'], 'string', 'max' => 20],
             [['name'], 'string', 'max' => 100],
-            [['id'], 'unique','on'=>['create']],
+            [['id','code','name'], 'unique','on'=>['create','update']],
             [['show'], 'in','range'=>[0,1]],
             [['status'], 'in','range'=>[0,1]],
         ];

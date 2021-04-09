@@ -38,7 +38,7 @@ class AdminRoleInfo extends \yii\db\ActiveRecord
             ['id', 'compare', 'compareValue' => 0, 'operator' => '>'],
             [['create_time'], 'safe'],
             [['name'], 'string', 'max' => 100],
-            [['id'], 'unique','on'=>['create']],
+            [['id','name'], 'unique','on'=>['create','update']],
         ];
     }
     public function scenarios()
