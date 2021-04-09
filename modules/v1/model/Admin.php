@@ -4,7 +4,9 @@ namespace app\modules\v1\model;
 
 use Yii,
     yii\data\Pagination,
-    app\modules\v1\model\AdminInfo;
+    app\modules\v1\model\AdminInfo,
+    yii\db\ActiveRecord,
+    app\common\Helper;
 
 /**
  * This is the model class for table "{{%admin}}".
@@ -14,7 +16,8 @@ use Yii,
  * @property string $hash 校验hash
  * @property string $password 密码
  */
-class Admin extends \yii\db\ActiveRecord
+
+class Admin extends ActiveRecord 
 {
     const SCENARIO_ADMIN_RESET_PASSWORD= 'reset_password';
     const SCENARIO_ADMIN_UPDATE= 'update';
@@ -97,6 +100,14 @@ class Admin extends \yii\db\ActiveRecord
         return $this->access_token = Yii::$app->security->generateRandomString();
     }
 
+    public static function findIdentityByAccessToken($token, $type = null)
+   {
+        $admin_info=Helper::getCache($token);
+        if(empty($admin_info) ||!isset($admin_info)){
+            return static::findOne(['access_token' => $token]);
+        }
+        return true;
+   }
      /**
      * Creates data provider instance with search query applied
      *

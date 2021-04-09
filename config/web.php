@@ -44,10 +44,10 @@ $config = [
             'keyPrefix' => 'yii_erik',
             'useApcu' => true,
         ],
-        // 'user' => [
-        //     'identityClass' => 'app\v1\models\Admin',
-        //     'enableAutoLogin' => true,
-        // ],
+         //'user' => [
+         //    'identityClass' => 'app\modules\v1\model\Admin',
+         //    'enableAutoLogin' => true,
+         //],
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],

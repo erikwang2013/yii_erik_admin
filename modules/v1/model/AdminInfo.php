@@ -2,7 +2,7 @@
 
 namespace app\modules\v1\model;
 
-use Yii;
+use Yii,yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%admin_info}}".
@@ -16,7 +16,7 @@ use Yii;
  * @property string $create_time
  * @property string $update_time
  */
-class AdminInfo extends \yii\db\ActiveRecord
+class AdminInfo extends ActiveRecord
 {
     const SCENARIO_ADMIN_INFO_UPDATE='update';
     const SCENARIO_ADMIN_INFO_CREATE='create';

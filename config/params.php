@@ -10,5 +10,10 @@ return [
     'snowflake'=>[
         'data_center_id'=>0,   //数据中心编号
         'unix_id'=>0      //机器编号 
+    ],
+    //开放接口
+    'public_url'=>[
+        'v1/public/login',
+        'v1/public/captcha'
     ]
 ];
