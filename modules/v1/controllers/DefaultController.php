@@ -30,7 +30,6 @@ class DefaultController extends Controller
         $behaviors = parent::behaviors();
         $response = $this->response ? : Yii::$app->getResponse();
         $request = Yii::$app->request;
-        $headers=$request->headers;
         if($this->publicUrl($request)){
             $this->checkToken($request);
         }
