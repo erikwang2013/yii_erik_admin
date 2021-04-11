@@ -40,10 +40,12 @@ class Admin extends ActiveRecord
         return [
             [['id'], 'required','on'=>['create']],
             [['name','password','password_repeat'], 'required','on'=>['create']],
-            [['phone'],'match','pattern'=>'/^[1][345678][0-9]{9}$/'],
+            [['phone'],'match','pattern'=>'/^[1][3456789][0-9]{9}$/'],
             [['id','status'], 'integer'], 
             ['id', 'compare', 'compareValue' => 0, 'operator' => '>'],
             ['status','in','range'=>[0,1]],
+            ['email', 'email'],
+            [['email'],'string','max'=>60],
             [['name','nick_name'], 'string', 'length' => [2,15]],
             [['access_token'],'string','max'=>200],
             [['password','password_repeat'],'string','length' => [6, 12]],
@@ -71,6 +73,7 @@ class Admin extends ActiveRecord
             'name' => Yii::t('app', 'Admin Name'),
             'nick_name' => Yii::t('app', 'Nickname'),
             'phone' => Yii::t('app', 'Phone'),
+            'email' => Yii::t('app', 'Email'),
             'password' => Yii::t('app', 'Password'),
             'password_repeat'=>Yii::t('app','Repeat Password'),
             'status'=>Yii::t('app','Admin Status')
@@ -119,14 +122,20 @@ class Admin extends ActiveRecord
     {
         $query = $this->find();
         $table=$this->tableName();
-        $query->andFilterWhere([$table.'.id' =>isset($params['id'])?$params['id']:''])
-        ->andFilterWhere(['like', $table.'.phone',isset($params['phone'])?$params['phone']:''])
-        ->andFilterWhere(['like', $table.'.nick_name',isset($params['nick_name'])?$params['nick_name']:''])
-        ->andFilterWhere(['like',$table.'.name',isset($params['name'])?$params['name']:'']);
+        $query->andFilterWhere([$table.'.id' =>isset($params['id'])?$params['id']:'']);
+        if (preg_match('/^[1][3456789][0-9]{9}$/',$params['name']) && isset($params['name'])) {
+            $query->andFilterWhere(['like', $table.'.phone',$params['name']]);
+        }elseif(preg_match('/^[a-z0-9A-Z]+[- | a-z0-9A-Z . _]+@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-z]{2,}$/',$params['name'])  && isset($params['name'])){
+            $query->andFilterWhere(['like', $table.'.email',$params['name']]);
+        }else{
+            $query->andFilterWhere(['like',$table.'.name',$params['name']]);
+        }
+
+        $query->andFilterWhere(['like', $table.'.nick_name',isset($params['nick_name'])?$params['nick_name']:'']);
+        
         $query->joinWith(["adminInfo"=>function($query) use($params){
             $info=AdminInfo::tableName();
            return $query->andFilterWhere( ['like', $info.'.real_name',isset($params['real_name'])?$params['real_name']:''])
-           ->andFilterWhere(['like', $info.'.email',isset($params['email'])?$params['email']:''])
            ->andFilterWhere([$info.'.sex' =>isset($params['sex'])?$params['sex']:'']);
         }]);
         $query->joinWith(["adminRole"]);
@@ -158,6 +167,7 @@ class Admin extends ActiveRecord
                 'name'=>$v->name,
                 'nick_name'=>$v->nick_name,
                 'phone'=>$v->phone,
+                'email'=>$v->email,
                 'role'=>$role,
                 'real_name'=>$admin_info->real_name,
                 'status'=>[
@@ -168,7 +178,6 @@ class Admin extends ActiveRecord
                     'key'=>$admin_info->sex,
                     'value'=>$admin_info->sex?Yii::t('app','Man'):Yii::t('app','Woman')
                 ],
-                'email'=>$admin_info->email,
                 'img'=>$admin_info->img,
                 'create_time'=>$admin_info->create_time,
                 'update_time'=>$admin_info->update_time

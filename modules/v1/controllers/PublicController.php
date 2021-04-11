@@ -52,8 +52,10 @@ class PublicController extends DefaultController
         $table=$model_admin->tableName();
         $query_admin=$model_admin::find();
         
-        if (preg_match('/^[1][345678][0-9]{9}$/',$user_name)) {
+        if (preg_match('/^[1][3456789][0-9]{9}$/',$user_name)) {
             $query_admin->where($table.'.phone=:phone', [':phone'=>$user_name]);
+        }elseif(preg_match('/^[a-z0-9A-Z]+[- | a-z0-9A-Z . _]+@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-z]{2,}$/',$user_name)){
+            $query_admin->where($table.'.email=:email',[':email'=>$user_name]);
         }else{
             $query_admin->where($table.'.name=:name',[':name'=>$user_name]);
         }

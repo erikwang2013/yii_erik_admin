@@ -35,14 +35,12 @@ class AdminInfo extends ActiveRecord
     public function rules()
     {
         return [
-            [['id','email','real_name'], 'unique','on'=>['create','update']],
+            [['id','real_name'], 'unique','on'=>['create','update']],
             [['id'], 'required','on'=>['create','update']],
             [['sex'], 'in','range'=>[0,1]],
             [['id','sex'], 'integer'],
             [['img'], 'string','max'=>200],
             [['real_name'],'string','max'=>18],
-            ['email', 'email'],
-            [['email'],'string','max'=>60],
             [['create_time', 'update_time'], 'safe'],
         ];
     }
@@ -63,7 +61,6 @@ class AdminInfo extends ActiveRecord
             'id' => Yii::t('app', 'Admin Id'),
             'real_name' => Yii::t('app', 'Real Name'),
             'sex' => Yii::t('app', 'Sex'),
-            'email' => Yii::t('app', 'Email'),
             'img' => Yii::t('app', 'Header Img'),
             'create_time' => Yii::t('app', 'Create Time'),
             'update_time' => Yii::t('app', 'Update Time'),
