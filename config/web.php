@@ -15,7 +15,7 @@ $config = [
     ],
     'modules' => [
         'v1' => [
-            'class' => 'app\modules\v1\Module',
+            'class' => 'app\modules\v1\admin\Module',
         ]
     ],
     'components' => [

@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\model\v1\admin;
+namespace app\modules\v1\admin\model;
 
 use Yii,
     yii\data\Pagination,
@@ -122,13 +122,16 @@ class Admin extends ActiveRecord
         $query = $this->find();
         $table=$this->tableName();
         $query->andFilterWhere([$table.'.id' =>isset($params['id'])?$params['id']:'']);
-        if (preg_match('/^[1][3456789][0-9]{9}$/',$params['name']) && isset($params['name'])) {
-            $query->andFilterWhere(['like', $table.'.phone',$params['name']]);
-        }elseif(preg_match('/^[a-z0-9A-Z]+[- | a-z0-9A-Z . _]+@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-z]{2,}$/',$params['name'])  && isset($params['name'])){
-            $query->andFilterWhere(['like', $table.'.email',$params['name']]);
-        }else{
-            $query->andFilterWhere(['like',$table.'.name',$params['name']]);
+        if(isset($params['name'])){
+            if (preg_match('/^[1][3456789][0-9]{9}$/',$params['name'])) {
+                $query->andFilterWhere(['like', $table.'.phone',$params['name']]);
+            }elseif(preg_match('/^[a-z0-9A-Z]+[- | a-z0-9A-Z . _]+@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-z]{2,}$/',$params['name'])){
+                $query->andFilterWhere(['like', $table.'.email',$params['name']]);
+            }else{
+                $query->andFilterWhere(['like',$table.'.name',$params['name']]);
+            }
         }
+        
 
         $query->andFilterWhere(['like', $table.'.nick_name',isset($params['nick_name'])?$params['nick_name']:'']);
         

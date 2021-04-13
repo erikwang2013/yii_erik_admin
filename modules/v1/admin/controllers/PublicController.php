@@ -1,14 +1,14 @@
 <?php
 
-namespace app\modules\controllers\v1\admin;
+namespace app\modules\v1\admin\controllers;
 
 use Yii,
     app\common\CheckData,
     app\common\Helper,
-    app\modules\model\v1\admin\Admin,
-    app\modules\validate\v1\admin\AdminValidate,
-    app\modules\model\v1\admin\AdminRoleAuthority,
-    app\modules\model\v1\admin\AdminAuthority;
+    app\modules\v1\admin\model\Admin,
+    app\modules\v1\admin\validate\AdminValidate,
+    app\modules\v1\admin\model\AdminRoleAuthority,
+    app\modules\v1\admin\model\AdminAuthority;
 
 /**
  * 公用接口

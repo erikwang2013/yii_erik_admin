@@ -1,23 +1,23 @@
 <?php
 
-namespace app\modules\model\v1\admin;
+namespace app\modules\v1\admin\model;
 
 use Yii;
 
 /**
- * This is the model class for table "{{%admin_role_authority}}".
+ * This is the model class for table "{{%admin_role}}".
  *
+ * @property int $admin_id 用户id
  * @property int $role_id 角色id
- * @property int $authority_id 权限id
  */
-class AdminRoleAuthority extends \yii\db\ActiveRecord
+class AdminRole extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return '{{%admin_role_authority}}';
+        return '{{%admin_role}}';
     }
 
     /**
@@ -26,8 +26,8 @@ class AdminRoleAuthority extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['role_id', 'authority_id'], 'required'],
-            [['role_id', 'authority_id'], 'integer'],
+            [['admin_id', 'role_id'], 'required'],
+            [['admin_id', 'role_id'], 'integer'],
         ];
     }
 
@@ -37,8 +37,8 @@ class AdminRoleAuthority extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
+            'admin_id' => Yii::t('app', 'Admin ID'),
             'role_id' => Yii::t('app', 'Role ID'),
-            'authority_id' => Yii::t('app', 'Authority ID'),
         ];
     }
 }

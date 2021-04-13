@@ -1,14 +1,14 @@
 <?php
 
-namespace app\modules\controllers\v1\admin;
+namespace app\modules\v1\admin\controllers;
 
 use Yii,
-    app\modules\model\v1\admin\AdminRoleInfo,
+    app\modules\v1\admin\model\AdminRoleInfo,
     yii\web\NotFoundHttpException,
     app\common\CheckData,
     app\common\Helper,
     yii\helpers\ArrayHelper,
-    app\modules\model\v1\admin\AdminRoleAuthority;
+    app\modules\v1\admin\model\AdminRoleAuthority;
 
 /**
  * AdminRoleInfoController implements the CRUD actions for AdminRoleInfo model.

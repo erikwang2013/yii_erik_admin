@@ -1,9 +1,9 @@
 <?php
 
-namespace app\modules\controllers\v1\admin;
+namespace app\modules\v1\admin\controllers;
 
 use yii\web\Controller,Yii,
-    app\modules\model\v1\admin\Admin,
+    app\modules\v1\admin\model\Admin,
     app\common\Helper,
     yii\web\Response;
 

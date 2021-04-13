@@ -1,14 +1,13 @@
 <?php
 
-namespace app\modules\controllers\v1\admin;
+namespace app\modules\v1\admin\controllers;
 
 use Yii,
-    app\modules\model\v1\admin\AdminAuthority,
+    app\modules\v1\admin\model\AdminAuthority,
     yii\web\NotFoundHttpException,
     app\common\CheckData,
     app\common\Helper,
-    yii\helpers\ArrayHelper,
-    yii\filters\Cors;
+    yii\helpers\ArrayHelper;
 
 /**
  * AdminAuthorityController implements the CRUD actions for AdminAuthority model.
