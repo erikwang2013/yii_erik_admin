@@ -1,13 +1,9 @@
 <?php
 
-namespace app\modules\v1\controllers;
+namespace app\modules\controllers\v1\admin;
 
 use yii\web\Controller,Yii,
-    yii\filters\auth\HttpBasicAuth,
-    yii\filters\auth\CompositeAuth,
-    yii\filters\auth\HttpBearerAuth,
-    yii\filters\auth\QueryParamAuth,
-    app\modules\v1\model\Admin,
+    app\modules\model\v1\admin\Admin,
     app\common\Helper,
     yii\web\Response;
 

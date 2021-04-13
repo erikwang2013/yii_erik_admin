@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\v1\model;
+namespace app\modules\model\v1\admin;
 
 use Yii,
     yii\data\Pagination;

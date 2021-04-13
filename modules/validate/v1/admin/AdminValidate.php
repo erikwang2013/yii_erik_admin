@@ -1,5 +1,5 @@
 <?php
-namespace app\modules\v1\validate;
+namespace app\modules\validate\v1\admin;
 
 use Yii,
 yii\base\DynamicModel,

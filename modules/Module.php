@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\v1;
+namespace app\modules;
 
 /**
  * v1 module definition class
