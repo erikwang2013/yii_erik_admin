@@ -146,7 +146,7 @@ class Helper
      * @DateTime 2021-04-08 09:49:21
      * @param [type] $model
      * @param [type] $data
-     * @param integer $status
+     * @param integer $status 0返回数组 1覆盖对象
      * @return void
      */
     public static function filterKey($model,$data,$status=1){
