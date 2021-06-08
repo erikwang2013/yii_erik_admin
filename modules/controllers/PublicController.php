@@ -5,10 +5,10 @@ namespace app\modules\controllers;
 use Yii,
     app\common\CheckData,
     app\common\Helper,
-    app\modules\model\v1\admin\Admin,
-    app\modules\validate\v1\admin\AdminValidate,
-    app\modules\model\v1\admin\AdminRoleAuthority,
-    app\modules\model\v1\admin\AdminAuthority,
+    app\modules\models\v1\admin\Admin,
+    app\modules\validates\v1\admin\AdminValidate,
+    app\modules\models\v1\admin\AdminRoleAuthority,
+    app\modules\models\v1\admin\AdminAuthority,
     app\modules\controllers\DefaultController;
 
 /**
