@@ -37,3 +37,4 @@ tests/_support/_generated
 /runtime/logs/*
 /runtime/URL/*
 /runtime/HTML/*
+composer.lock
