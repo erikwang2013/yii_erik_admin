@@ -1,14 +1,15 @@
 <?php
+
 namespace app\common;
 
 use Yii,
-app\common\Snowflake,
-app\common\CodeImg;
+    app\common\Snowflake,
+    app\common\CodeImg;
 
 class Helper
 {
 
-        /**
+    /**
      * 返回响应
      *
      * @Author erik
@@ -21,24 +22,25 @@ class Helper
      * @param string $msg
      * @return void
      */
-    public static function reset($data=[],$count=0,$code=0,$msg=''){
-        $result= [
-            'code'=>$code,
-            'count'=>$count,
-            'data'=>$data
+    public static function reset($data = [], $count = 0, $code = 0, $msg = '')
+    {
+        $result = [
+            'code' => $code,
+            'count' => $count,
+            'data' => $data
         ];
-        if(empty($msg)){
-            if($code==0 ){
-                $result['msg']=Yii::t('app', 'Ok');
-            }else{
-                $result['msg']=Yii::t('app',"Fail");
+        if (empty($msg)) {
+            if ($code == 0) {
+                $result['msg'] = Yii::t('app', 'Ok');
+            } else {
+                $result['msg'] = Yii::t('app', "Fail");
             }
-        }else{
-            $result['msg']=$msg;
+        } else {
+            $result['msg'] = $msg;
         }
         return json_encode($result);
     }
-        /**
+    /**
      * 生成数据表id
      *
      * @Author erik
@@ -47,12 +49,13 @@ class Helper
      * @DateTime 2021-02-25 00:13:47
      * @return void
      */
-    public static function getCreateId(){
-        $snowflake_config=Yii::$app->params['snowflake'];
-        $snowflake=new Snowflake($snowflake_config['data_center_id'],$snowflake_config['unix_id']);
+    public static function getCreateId()
+    {
+        $snowflake_config = Yii::$app->params['snowflake'];
+        $snowflake = new Snowflake($snowflake_config['data_center_id'], $snowflake_config['unix_id']);
         return $snowflake->generateId();
     }
- 
+
     /**
      * 获取缓存数据
      *
@@ -61,11 +64,12 @@ class Helper
      * @Url https://erik.xyz
      * @DateTime 2021-03-01 21:31:26
      * @param [type] $key
-     * @return void
+     * @return string
      */
-    public static function getCache($key){
-        $cache=Yii::$app->cache;
-        $data=$cache->get($key);
+    public static function getCache($key)
+    {
+        $cache = Yii::$app->cache;
+        $data = $cache->get($key);
         return $data;
     }
 
@@ -81,9 +85,10 @@ class Helper
      * @param integer $time
      * @return void
      */
-    public static function setCache($key,$value,$time=0){
-        $cache=Yii::$app->cache;
-        $data=$cache->set($key,$value,$time);
+    public static function setCache($key, $value, $time = 0)
+    {
+        $cache = Yii::$app->cache;
+        $data = $cache->set($key, $value, $time);
         return $data;
     }
 
@@ -99,9 +104,10 @@ class Helper
      * @param integer $time
      * @return void
      */
-    public static function addCache($key,$value,$time=0){
-        $cache=Yii::$app->cache;
-        $data=$cache->add($key,$value,$time);
+    public static function addCache($key, $value, $time = 0)
+    {
+        $cache = Yii::$app->cache;
+        $data = $cache->add($key, $value, $time);
         return $data;
     }
 
@@ -115,9 +121,10 @@ class Helper
      * @param [type] $key
      * @return void
      */
-    public static function deleteCache($key){
-        $cache=Yii::$app->cache;
-        $data=$cache->delete($key);
+    public static function deleteCache($key)
+    {
+        $cache = Yii::$app->cache;
+        $data = $cache->delete($key);
         return $data;
     }
     /**
@@ -129,11 +136,12 @@ class Helper
      * @DateTime 2021-03-01 22:08:51
      * @return void
      */
-    public static function getCode(){
-        $code=new CodeImg();
+    public static function getCode()
+    {
+        $code = new CodeImg();
         return [
-            'number'=>$code->getPhrase(),
-            'img'=>$code->inline()
+            'number' => $code->getPhrase(),
+            'img' => $code->inline()
         ];
     }
 
@@ -149,24 +157,24 @@ class Helper
      * @param integer $status 0返回数组 1覆盖对象
      * @return void
      */
-    public static function filterKey($model,$data,$status=1){
-        if($status==0){
+    public static function filterKey($model, $data, $status = 1)
+    {
+        if ($status == 0) {
             $attributes = array_flip($model->safeAttributes() ? $model->safeAttributes() : $model->attributes());
-            $data_info=[];
-            foreach($data as $name=>$value){
+            $data_info = [];
+            foreach ($data as $name => $value) {
                 if (isset($attributes[$name])) {
-                    $data_info[$name]=$value;
+                    $data_info[$name] = $value;
                 }
             }
             return $data_info;
-        }else{
+        } else {
             $attributes = array_flip($model->safeAttributes() ? $model->safeAttributes() : $model->attributes());
-            foreach($data as $name=>$value){
+            foreach ($data as $name => $value) {
                 if (isset($attributes[$name])) {
-                    $model->$name=$value;
+                    $model->$name = $value;
                 }
             }
         }
-        
     }
 }

@@ -1,13 +1,14 @@
 <?php
 
-namespace app\modules\v1\admin\controllers;
+namespace app\modules\controllers\v1\admin;
 
 use Yii,
-    app\modules\v1\admin\model\AdminAuthority,
+    app\modules\model\v1\admin\AdminAuthority,
     yii\web\NotFoundHttpException,
     app\common\CheckData,
     app\common\Helper,
-    yii\helpers\ArrayHelper;
+    yii\helpers\ArrayHelper,
+    app\modules\controllers\DefaultController;
 
 /**
  * AdminAuthorityController implements the CRUD actions for AdminAuthority model.
@@ -22,24 +23,24 @@ class AdminAuthorityController extends DefaultController
      */
     public function actionIndex()
     {
-        $params_config=Yii::$app->params;
-        $params=Yii::$app->request->get();
-        $page=Yii::$app->request->get('page',$params_config['page']);
-        $limit=Yii::$app->request->get('limit',$params_config['limit']);
-        $error_page=CheckData::checkPage($page,$limit);
-        if($error_page){
-            return Helper::reset([],0,1,$error_page);
+        $params_config = Yii::$app->params;
+        $params = Yii::$app->request->get();
+        $page = Yii::$app->request->get('page', $params_config['page']);
+        $limit = Yii::$app->request->get('limit', $params_config['limit']);
+        $error_page = CheckData::checkPage($page, $limit);
+        if ($error_page) {
+            return Helper::reset([], 0, 1, $error_page);
         }
         $model = new AdminAuthority(['scenario' => 'search']);
-        $data=Helper::filterKey($model,$params,0)?:[];
-        $model->attributes=$data;
-        $result=[];
+        $data = Helper::filterKey($model, $params, 0) ?: [];
+        $model->attributes = $data;
+        $result = [];
         if ($model->validate()) {
-            $dataProvider = $model->search($data,$page,$limit);
-            $result=ArrayHelper::toArray($dataProvider);
-            return Helper::reset($result['list'],$result['count'],0);
+            $dataProvider = $model->search($data, $page, $limit);
+            $result = ArrayHelper::toArray($dataProvider);
+            return Helper::reset($result['list'], $result['count'], 0);
         }
-        return Helper::reset([],0,1,CheckData::getValidateError($model->errors));
+        return Helper::reset([], 0, 1, CheckData::getValidateError($model->errors));
     }
 
 
@@ -50,20 +51,20 @@ class AdminAuthorityController extends DefaultController
      */
     public function actionCreate()
     {
-        $post=Yii::$app->request->post();
-        $post['parent_id']=Yii::$app->request->post('parent_id',0);
+        $post = Yii::$app->request->post();
+        $post['parent_id'] = Yii::$app->request->post('parent_id', 0);
         $model = new AdminAuthority(['scenario' => 'create']);
-        $post['id']=Helper::getCreateId();
-        $data=Helper::filterKey($model,$post,0);
-        $model->attributes=$data;
+        $post['id'] = Helper::getCreateId();
+        $data = Helper::filterKey($model, $post, 0);
+        $model->attributes = $data;
         if (!$model->validate()) {
-            return Helper::reset([],0,1,CheckData::getValidateError($model->errors));
+            return Helper::reset([], 0, 1, CheckData::getValidateError($model->errors));
         }
-        
+
         if ($model->save(false)) {
             return Helper::reset([], 0, 0);
         }
-        return Helper::reset([],0,1,$model->errors);
+        return Helper::reset([], 0, 1, $model->errors);
     }
 
     /**
@@ -75,24 +76,24 @@ class AdminAuthorityController extends DefaultController
      */
     public function actionUpdate($id)
     {
-        $post=Yii::$app->request->post();
-        if(count($post)==0){
-            return Helper::reset([],0,1,Yii::t('app','Update at least one data'));
+        $post = Yii::$app->request->post();
+        if (count($post) == 0) {
+            return Helper::reset([], 0, 1, Yii::t('app', 'Update at least one data'));
         }
-        $model =new AdminAuthority(['scenario' => 'update']);
-        $update_data=$post;
-        $post['id']=$id;
-        $data=Helper::filterKey($model,$post,0);
-        $model->attributes=$data;
+        $model = new AdminAuthority(['scenario' => 'update']);
+        $update_data = $post;
+        $post['id'] = $id;
+        $data = Helper::filterKey($model, $post, 0);
+        $model->attributes = $data;
         if (!$model->validate()) {
-            return Helper::reset([],0,1,CheckData::getValidateError($model->errors));  
+            return Helper::reset([], 0, 1, CheckData::getValidateError($model->errors));
         }
         $update = $this->findModel($id);
-        Helper::filterKey($update,$update_data);
+        Helper::filterKey($update, $update_data);
         if ($update->save(false)) {
             return Helper::reset([], 0, 0);
         }
-        return Helper::reset([],0,1,$update->errors);
+        return Helper::reset([], 0, 1, $update->errors);
     }
 
     /**
@@ -104,18 +105,18 @@ class AdminAuthorityController extends DefaultController
      */
     public function actionDelete($id)
     {
-        $id=explode(',',$id);
-        foreach($id as $k=>$v){
-            $check_data=CheckData::checkId($v);
-            if($check_data){
-                return Helper::reset([],0,1,$check_data);
+        $id = explode(',', $id);
+        foreach ($id as $k => $v) {
+            $check_data = CheckData::checkId($v);
+            if ($check_data) {
+                return Helper::reset([], 0, 1, $check_data);
             }
         }
         $model = new AdminAuthority();
-        if($model->deleteAll(['id'=>$id])){
-            return Helper::reset([],0,0);
+        if ($model->deleteAll(['id' => $id])) {
+            return Helper::reset([], 0, 0);
         }
-        return Helper::reset([],0,1,$model->errors);
+        return Helper::reset([], 0, 1, $model->errors);
     }
 
     /**

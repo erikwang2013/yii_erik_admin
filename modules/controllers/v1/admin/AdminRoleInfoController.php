@@ -1,14 +1,15 @@
 <?php
 
-namespace app\modules\v1\admin\controllers;
+namespace app\modules\controllers\v1\admin;
 
 use Yii,
-    app\modules\v1\admin\model\AdminRoleInfo,
+    app\modules\model\v1\admin\AdminRoleInfo,
     yii\web\NotFoundHttpException,
     app\common\CheckData,
     app\common\Helper,
     yii\helpers\ArrayHelper,
-    app\modules\v1\admin\model\AdminRoleAuthority;
+    app\modules\model\v1\admin\AdminRoleAuthority,
+    app\modules\controllers\DefaultController;
 
 /**
  * AdminRoleInfoController implements the CRUD actions for AdminRoleInfo model.
@@ -23,24 +24,24 @@ class AdminRoleInfoController extends DefaultController
      */
     public function actionIndex()
     {
-        
-        $params_config=Yii::$app->params;
-        $params=Yii::$app->request->get();
-        $page=Yii::$app->request->get('page',$params_config['page']);
-        $limit=Yii::$app->request->get('limit',$params_config['limit']);
-        $error_page=CheckData::checkPage($page,$limit);
-        if($error_page){
-            return Helper::reset([],0,1,$error_page);
+
+        $params_config = Yii::$app->params;
+        $params = Yii::$app->request->get();
+        $page = Yii::$app->request->get('page', $params_config['page']);
+        $limit = Yii::$app->request->get('limit', $params_config['limit']);
+        $error_page = CheckData::checkPage($page, $limit);
+        if ($error_page) {
+            return Helper::reset([], 0, 1, $error_page);
         }
         $model = new AdminRoleInfo(['scenario' => 'search']);
-        $data=Helper::filterKey($model,$params,0)?:[];
-        $model->attributes=$data;
+        $data = Helper::filterKey($model, $params, 0) ?: [];
+        $model->attributes = $data;
         if ($model->validate()) {
-            $dataProvider = $model->search($data,$page,$limit);
-            $result=ArrayHelper::toArray($dataProvider);
-            return Helper::reset($result['list'],$result['count'],0);
+            $dataProvider = $model->search($data, $page, $limit);
+            $result = ArrayHelper::toArray($dataProvider);
+            return Helper::reset($result['list'], $result['count'], 0);
         }
-        return Helper::reset([],0,1,CheckData::getValidateError($model->errors));
+        return Helper::reset([], 0, 1, CheckData::getValidateError($model->errors));
     }
 
     /**
@@ -50,12 +51,12 @@ class AdminRoleInfoController extends DefaultController
      */
     public function actionCreate()
     {
-        $post=Yii::$app->request->post();
-        $authority_id=Yii::$app->request->post('authority_ids');
+        $post = Yii::$app->request->post();
+        $authority_id = Yii::$app->request->post('authority_ids');
         if (isset($authority_id)) {
-            $authority_ids=explode(',', $authority_id);
-            foreach ($authority_ids as $k=>$v) {
-                $check_data=CheckData::checkId($v, Yii::t('app', 'Permission ID'));
+            $authority_ids = explode(',', $authority_id);
+            foreach ($authority_ids as $k => $v) {
+                $check_data = CheckData::checkId($v, Yii::t('app', 'Permission ID'));
                 if ($check_data) {
                     return Helper::reset([], 0, 1, $check_data);
                 }
@@ -65,27 +66,27 @@ class AdminRoleInfoController extends DefaultController
         $model = new AdminRoleInfo(['scenario' => 'create']);
         $db = Yii::$app->db;
         $transaction = $db->beginTransaction();
-        $post['id']=Helper::getCreateId();
-        $data=Helper::filterKey($model,$post,0);
-        $model->attributes=$data;
+        $post['id'] = Helper::getCreateId();
+        $data = Helper::filterKey($model, $post, 0);
+        $model->attributes = $data;
         if (!$model->validate()) {
             $transaction->rollBack();
-            return Helper::reset([],0,1,CheckData::getValidateError($model->errors));
+            return Helper::reset([], 0, 1, CheckData::getValidateError($model->errors));
         }
-        
+
         if (!$model->save(false)) {
             $transaction->rollBack();
-            return Helper::reset([],0,1,$model->errors);
+            return Helper::reset([], 0, 1, $model->errors);
         }
-        
+
         if (isset($authority_id)) {
-            $authority=AdminRoleAuthority::tableName();
-            $insert=[];
-            foreach ($authority_ids as $m=>$n) {
-                $insert[]=[
-                'role_id'=>$post['id'],
-                'authority_id'=>$n
-            ];
+            $authority = AdminRoleAuthority::tableName();
+            $insert = [];
+            foreach ($authority_ids as $m => $n) {
+                $insert[] = [
+                    'role_id' => $post['id'],
+                    'authority_id' => $n
+                ];
             }
             Yii::$app->db->createCommand()->batchInsert($authority, ['role_id', 'authority_id'], $insert)->execute();
         }
@@ -102,58 +103,58 @@ class AdminRoleInfoController extends DefaultController
      */
     public function actionUpdate($id)
     {
-        $authority_id=Yii::$app->request->post('authority_ids');
-        $post=Yii::$app->request->post();
+        $authority_id = Yii::$app->request->post('authority_ids');
+        $post = Yii::$app->request->post();
         if (isset($authority_id)) {
-            $authority_ids=explode(',', $authority_id);
-            foreach ($authority_ids as $k=>$v) {
-                $check_data=CheckData::checkId($v, Yii::t('app', 'Permission ID'));
+            $authority_ids = explode(',', $authority_id);
+            foreach ($authority_ids as $k => $v) {
+                $check_data = CheckData::checkId($v, Yii::t('app', 'Permission ID'));
                 if ($check_data) {
                     return Helper::reset([], 0, 1, $check_data);
                 }
             }
             unset($post['authority_ids']);
         }
-        
-        
-        if(count($post)==0){
-            return Helper::reset([],0,1,Yii::t('app','Update at least one data'));
+
+
+        if (count($post) == 0) {
+            return Helper::reset([], 0, 1, Yii::t('app', 'Update at least one data'));
         }
         $model = new AdminRoleInfo(['scenario' => 'update']);
-        $update_data=$post;
-        $post['id']=$id;
-        $data=Helper::filterKey($model,$post,0);
-        $model->attributes=$data;
+        $update_data = $post;
+        $post['id'] = $id;
+        $data = Helper::filterKey($model, $post, 0);
+        $model->attributes = $data;
         $db = Yii::$app->db;
         $transaction = $db->beginTransaction();
         if (!$model->validate()) {
             $transaction->rollBack();
-            return Helper::reset([],0,1,CheckData::getValidateError($model->errors));
+            return Helper::reset([], 0, 1, CheckData::getValidateError($model->errors));
         }
-        
+
         $update = $this->findModel($id);
-        Helper::filterKey($update,$update_data);
+        Helper::filterKey($update, $update_data);
         if (!$update->save(false)) {
             $transaction->rollBack();
-            return Helper::reset([],0,1,$update->errors);
+            return Helper::reset([], 0, 1, $update->errors);
         }
-        
-        
+
+
         if (isset($authority_id)) {
             //删除角色权限关系
-            $authority=new AdminRoleAuthority();
-            if(!$authority->deleteAll(['role_id'=>$id])){
+            $authority = new AdminRoleAuthority();
+            if (!$authority->deleteAll(['role_id' => $id])) {
                 $transaction->rollBack();
-                return Helper::reset([],0,1,$authority->errors);
+                return Helper::reset([], 0, 1, $authority->errors);
             }
-            $insert=[];
-            foreach ($authority_ids as $m=>$n) {
-                $insert[]=[
-                    'role_id'=>$id,
-                    'authority_id'=>$n
+            $insert = [];
+            foreach ($authority_ids as $m => $n) {
+                $insert[] = [
+                    'role_id' => $id,
+                    'authority_id' => $n
                 ];
             }
-            $authority_table=AdminRoleAuthority::tableName();
+            $authority_table = AdminRoleAuthority::tableName();
             Yii::$app->db->createCommand()->batchInsert($authority_table, ['role_id', 'authority_id'], $insert)->execute();
         }
         $transaction->commit();
@@ -169,27 +170,27 @@ class AdminRoleInfoController extends DefaultController
      */
     public function actionDelete($id)
     {
-        $id=explode(',',$id);
-        foreach($id as $k=>$v){
-            $check_data=CheckData::checkId($v);
-            if($check_data){
-                return Helper::reset([],0,1,$check_data);
+        $id = explode(',', $id);
+        foreach ($id as $k => $v) {
+            $check_data = CheckData::checkId($v);
+            if ($check_data) {
+                return Helper::reset([], 0, 1, $check_data);
             }
         }
         $db = Yii::$app->db;
         $transaction = $db->beginTransaction();
         $model = new AdminRoleInfo();
-        if(!$model->deleteAll(['id'=>$id])){
+        if (!$model->deleteAll(['id' => $id])) {
             $transaction->rollBack();
-            return Helper::reset([],0,1,$model->errors);
+            return Helper::reset([], 0, 1, $model->errors);
         }
-        $authority=new AdminRoleAuthority();
-        if (!$authority->deleteAll(['role_id'=>$id])) {
+        $authority = new AdminRoleAuthority();
+        if (!$authority->deleteAll(['role_id' => $id])) {
             $transaction->rollBack();
-            return Helper::reset([],0,1,$authority->errors);
+            return Helper::reset([], 0, 1, $authority->errors);
         }
         $transaction->commit();
-       return Helper::reset([], 0, 0);
+        return Helper::reset([], 0, 0);
     }
 
     /**

@@ -1,8 +1,8 @@
 <?php
 
-namespace app\modules\v1\admin\model;
+namespace app\modules\model\v1\admin;
 
-use Yii,yii\db\ActiveRecord;
+use Yii, yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "{{%admin_info}}".
@@ -18,9 +18,9 @@ use Yii,yii\db\ActiveRecord;
  */
 class AdminInfo extends ActiveRecord
 {
-    const SCENARIO_ADMIN_INFO_UPDATE='update';
-    const SCENARIO_ADMIN_INFO_CREATE='create';
-    const SCENARIO_ADMIN_INFO_SEARCH='search';
+    const SCENARIO_ADMIN_INFO_UPDATE = 'update';
+    const SCENARIO_ADMIN_INFO_CREATE = 'create';
+    const SCENARIO_ADMIN_INFO_SEARCH = 'search';
     /**
      * {@inheritdoc}
      */
@@ -35,21 +35,21 @@ class AdminInfo extends ActiveRecord
     public function rules()
     {
         return [
-            [['id','real_name'], 'unique','on'=>['create','update']],
-            [['id'], 'required','on'=>['create','update']],
-            [['sex'], 'in','range'=>[0,1]],
-            [['id','sex'], 'integer'],
-            [['img'], 'string','max'=>200],
-            [['real_name'],'string','max'=>18],
+            [['id', 'real_name'], 'unique', 'on' => ['create', 'update']],
+            [['id'], 'required', 'on' => ['create', 'update']],
+            [['sex'], 'in', 'range' => [0, 1]],
+            [['id', 'sex'], 'integer'],
+            [['img'], 'string', 'max' => 200],
+            [['real_name'], 'string', 'max' => 18],
             [['create_time', 'update_time'], 'safe'],
         ];
     }
     public function scenarios()
     {
         return [
-            self::SCENARIO_ADMIN_INFO_UPDATE=>['sex','real_name','email','img'],
-            self::SCENARIO_ADMIN_INFO_CREATE=>['id','sex','real_name','email','img','create_time','update_time'],
-            self::SCENARIO_ADMIN_INFO_SEARCH=>['real_name','email','sex']
+            self::SCENARIO_ADMIN_INFO_UPDATE => ['sex', 'real_name', 'email', 'img'],
+            self::SCENARIO_ADMIN_INFO_CREATE => ['id', 'sex', 'real_name', 'email', 'img', 'create_time', 'update_time'],
+            self::SCENARIO_ADMIN_INFO_SEARCH => ['real_name', 'email', 'sex']
         ];
     }
     /**
