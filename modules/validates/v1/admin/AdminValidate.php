@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\validate\v1\admin;
+namespace app\modules\validates\v1\admin;
 
 use Yii,
     yii\base\DynamicModel,
