@@ -20,6 +20,14 @@ class AdminAuthority extends \yii\db\ActiveRecord
     const SCENARIO_ADMIN_AUTHORITY_UPDATE = 'update';
     const SCENARIO_ADMIN_AUTHORITY_CREATE = 'create';
     const SCENARIO_ADMIN_AUTHORITY_SEARCH = 'search';
+
+    public $scenarios;
+
+    public function __construct($scenarios)
+    {
+        $this->scenarios = $scenarios;
+    }
+
     /**
      * {@inheritdoc}
      */

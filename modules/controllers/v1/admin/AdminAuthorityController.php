@@ -3,7 +3,7 @@
 namespace app\modules\controllers\v1\admin;
 
 use Yii,
-    app\modules\model\v1\admin\AdminAuthority,
+    app\modules\models\v1\admin\AdminAuthority,
     yii\web\NotFoundHttpException,
     app\common\CheckData,
     app\common\Helper,

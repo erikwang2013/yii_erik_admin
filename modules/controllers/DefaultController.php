@@ -4,7 +4,7 @@ namespace app\modules\controllers;
 
 use yii\web\Controller,
     Yii,
-    app\modules\model\v1\admin\Admin,
+    app\modules\models\v1\admin\Admin,
     app\common\Helper,
     yii\web\Response;
 

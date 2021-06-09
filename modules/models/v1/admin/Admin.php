@@ -23,6 +23,14 @@ class Admin extends ActiveRecord
     const SCENARIO_ADMIN_CREATE = 'create';
     const SCENARIO_ADMIN_SEARCH = 'search';
     public $password_repeat;
+
+    public $scenarios;
+
+    public function __construct($scenarios)
+    {
+        $this->scenarios = $scenarios;
+    }
+
     /**
      * {@inheritdoc}
      */

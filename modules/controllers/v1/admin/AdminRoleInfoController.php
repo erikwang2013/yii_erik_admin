@@ -3,12 +3,12 @@
 namespace app\modules\controllers\v1\admin;
 
 use Yii,
-    app\modules\model\v1\admin\AdminRoleInfo,
+    app\modules\models\v1\admin\AdminRoleInfo,
     yii\web\NotFoundHttpException,
     app\common\CheckData,
     app\common\Helper,
     yii\helpers\ArrayHelper,
-    app\modules\model\v1\admin\AdminRoleAuthority,
+    app\modules\models\v1\admin\AdminRoleAuthority,
     app\modules\controllers\DefaultController;
 
 /**

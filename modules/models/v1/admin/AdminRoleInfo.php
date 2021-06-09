@@ -18,6 +18,13 @@ class AdminRoleInfo extends \yii\db\ActiveRecord
     const SCENARIO_ADMIN_ROLE_INFO_UPDATE = 'update';
     const SCENARIO_ADMIN_ROLE_INFO_CREATE = 'create';
     const SCENARIO_ADMIN_ROLE_INFO_SEARCH = 'search';
+
+    public $scenarios;
+
+    public function __construct($scenarios)
+    {
+        $this->scenarios = $scenarios;
+    }
     /**
      * {@inheritdoc}
      */

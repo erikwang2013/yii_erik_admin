@@ -21,6 +21,16 @@ class AdminInfo extends ActiveRecord
     const SCENARIO_ADMIN_INFO_UPDATE = 'update';
     const SCENARIO_ADMIN_INFO_CREATE = 'create';
     const SCENARIO_ADMIN_INFO_SEARCH = 'search';
+
+    public $scenarios;
+
+    public function __construct($scenarios)
+    {
+        if (isset($scenarios)) {
+            $this->scenarios = $scenarios;
+        }
+    }
+
     /**
      * {@inheritdoc}
      */
