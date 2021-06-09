@@ -112,7 +112,7 @@ class AdminAuthorityController extends DefaultController
                 return Helper::reset([], 0, 1, $check_data);
             }
         }
-        $model = new AdminAuthority();
+        $model = new AdminAuthority(['scenarios' => 'search']);
         if ($model->deleteAll(['id' => $id])) {
             return Helper::reset([], 0, 0);
         }

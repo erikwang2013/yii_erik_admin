@@ -179,7 +179,7 @@ class AdminRoleInfoController extends DefaultController
         }
         $db = Yii::$app->db;
         $transaction = $db->beginTransaction();
-        $model = new AdminRoleInfo();
+        $model = new AdminRoleInfo(['scenarios' => 'search']);
         if (!$model->deleteAll(['id' => $id])) {
             $transaction->rollBack();
             return Helper::reset([], 0, 1, $model->errors);
